@@ -1,0 +1,185 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'poppins,san-serif';
+
+}
+body{
+    /* background: #020410; */
+    /* background: #D1B7A0 */
+    background: #dfcebe;
+}
+.header{
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    padding: 25px 12.5%;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+.navbar a{
+    position: relative;
+    font-size: 16px;
+    color: #959498;
+    text-decoration: none;
+    font-weight: 500;
+    margin-right: 30px;
+}
+.navbar a::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 2px;
+    background: #e4e4e4;
+    border-radius: 5px;
+    transform: translateY(10px);
+    opacity: 0;
+    transition: 0.5s;
+}
+.navbar a:hover::after{
+    transform: translateY(0px);
+    opacity: 1;
+}
+
+.dashboard-sidebar{
+   
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   width: 239px;
+   /* justify-content: flex-start; */
+   padding-left: 20px;
+   padding-top: 70px;
+   background: #fff;
+   border: 1px solid #ededed;
+   border-radius: 6px;
+   position: relative;
+}
+.container{
+    padding-top:200px ;
+    padding-bottom: 100px;
+    padding-left: 50px;
+    position: relative;
+    display: flex;
+}
+.dashboard-menu{
+    display: flex;
+    flex-direction: column;
+   align-items: flex-start;
+   padding-left: 0;
+   margin-left: 20px;
+    padding-top: 100px; 
+}
+.dashboard-sidebar .dashboard-menu{
+    padding: 30 0;
+}
+.dashboard-menu ul li a{
+    margin-bottom: 10px;
+    position: relative;
+    font-size: 16px;
+    color: #959498;
+    text-decoration: none;
+    font-weight: 500;
+    display: block;
+    padding: 6px 30px;    
+
+}
+.dashboard-menu ul {
+    list-style: none;
+    
+
+}
+.dashboard-menu li {
+   margin-bottom: 25px;
+
+}
+.dashboard-menu button{
+    background: #fee8eb;
+ 
+    margin-bottom: 10px;
+    position: relative;
+    font-size: 16px;
+    padding: 13px 35px;      
+    margin-left: 11px;
+    display: inline-block;
+    text-transform: capitalize;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    border: none;
+    margin-top: 25px;
+}
+.dashboard-menu button a{
+    color: #f73357;
+    font-weight: 600;
+    text-decoration: none;
+}
+.dashboard-sidebar .user-image h3{
+    font-size: 16px;
+    color: #748797;
+    font-weight: 600;
+    margin-top: 5px;
+    float: right;
+}
+.dashboard-sidebar .user-image{
+    height: 132px;
+    border-radius: 3px;
+  
+   
+}
+.dashboard-sidebar .user-image span{
+    display: block;
+    margin-top: 3px;
+    color: #959498;
+}
+img{
+
+    overflow: clip;
+}
+.user-image{
+    position: absolute; /* Change to absolute positioning */
+    top: 0; /* Align to the top of the parent */
+    left: 0; /* Align to the left of the parent */
+    padding: 30px;
+    padding-left: 20px; /* Adjust padding */
+    padding-bottom: 20px; /* Adjust padding */
+    width: 100%; /* Take full width of the parent */
+    background-color: #fff; /* Match background color of dashboard-sidebar */
+    border-bottom: 1px solid #ededed;
+}
+.dashboard-sidebar .user-image img{
+    height: 50px;
+    width: 50px;
+    border-radius: 3px;
+    position: absolute;
+    left: 30px;
+    top: 30px;
+}
+
+.details-lists{
+    display: flex;
+  
+}
+.single-list-one,.single-list-two,.single-list-three{
+  
+    background: #ffffff;
+    border: 1px solid #ededed;
+    width: 364px;
+    height: 185px;
+    margin-left: 20px;
+    
+}
+
+.main-content{
+    display: flex;
+   justify-content: flex-end;
+   margin-top: 12px;
+}

@@ -1,0 +1,145 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=poppins&display=swap">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <title>Bookings</title>
+    </head>
+    <body>
+       <!--navbar--> 
+       <nav class="navbar">
+        <h4>Dashboard</h4>
+        <div class="profile">
+            <span class="fas fa-search"><i class='bx bx-search'></i></span>
+            <img class="profile-image" src="Images/pp1.jpeg" alt="">
+            <p class="profile-name>" >Lorem Ipsum</p>
+        </div>
+       </nav>
+            <!--sidebar--> 
+            <input type="checkbox" id="toggle" >
+            <label class="side-toggle" for="toggle"><span ><i class='bx bxs-dashboard' ></i></span></label>
+            <div class="sidebar">
+                <div class="user-image">
+                    <img class="profile-image" src="Images/pp1.jpeg" alt="">
+                    <p class="role"> Manager    </p>
+                    </div>
+                <div class="sidebar-menu ">
+                    <span   class="bx bx-sidebar dash"></span><p class="dash"><a href="adminDash.php"> Dashboard</a></p>
+                </div>
+                <div class="sidebar-menu">
+                    <span class="bx bx-bookmark-heart"></span><p><a href="bookingsM.html">Bookings</a></p>
+                </div>
+                <div class="sidebar-menu">
+                    <span class="bx bx-user"></span><p> <a href="vendorsM.html"> Vendors</a></p>
+                </div>
+                <div class="sidebar-menu">
+                    <span class="bx bx-wallet-alt"></span><p>Finance</p>
+                </div>
+                <div class="sidebar-menu">
+                    <span  class='bx bx-objects-horizontal-left' ></span><p>Reports</p>
+                </div>
+               
+            </div>
+            <!--Maindashboard--> 
+            <main>
+            <div class="dashboard-container">
+               
+                <div class="card detail">
+                    <h2>Booking List</h2>
+                     <div class="detail-header">
+                                           
+                        <div class="filterEntries">
+                            <div class="entries">
+                                Show <select name="" id="table_size">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> entries
+                            </div>
+                            <div class="filter">
+                                <label for="search">Search:</label>
+                                <input type="search" name="" id="search" placeholder="Enter booking #/ client/date/service/vendor">
+                            </div>
+                        </div>
+                        <div class="addBookingBtn">
+                            <button>New Booking</button>
+                        </div> 
+                        <select id="filterDropdown">
+                            <option value="all">All</option>
+                            <option value="category2">Booked</option>
+                            <option value="category1">Pending</option>
+                            <option value="category2">Cancelled</option>
+                            <option value="category1">Paid</option>
+                            <option value="category2">Due</option>
+                            <!-- Add more options as needed -->
+                        </select>
+                   
+                     </div>
+                     <!-- end of header section -->
+                     <table>
+                        <thead>
+                        <tr>
+                            <th>Booking #</th>
+                            <th>Client</th>
+                            <th>Booking Date</th>
+                            <th>Event Date</th>                            
+                            <th>Service Booked</th>
+                            <th>Booking status</th>
+                            <th>Payment status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- <tr><td class="empty" colspan="11" style="text-align: center;">No data Available in table</td></tr> -->
+                        <tr>
+                            <td>BK-0001</td>
+                            <td>Jane Wairimu</td>
+                            <td>5/09/2023</td>
+                            <td>6/03/2024</td>
+                            <td>Venue</td>
+                            <td><span class="status fullfilled">Pending</span></td>
+                            <td><span class="status onprogress">Due</span></td>
+                            <td>
+                                <i class='bx bx-low-vision'></i>
+                                <i class='bx bx-pencil'></i>
+                                <i class='bx bx-trash' ></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BK-0001</td>
+                            <td>Natalie Kerring</td>
+                            <td>25/09/2023</td>
+                            <td>26/03/2024</td>
+                            <td>Venue</td>
+                            <td><span class="status confirmed">Booked</span></td>
+                            <td><span class="status onprogress">Paid</span></td>
+                            <td>
+                                <i class='bx bx-low-vision'></i>
+                                <i class='bx bx-pencil'></i>
+                                <i class='bx bx-trash' ></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                     </table>
+                     <footer>
+                        <span>showing 1 of 10 of 50 entries</span>
+                        <div class="pagination">
+                            <button>prev</button>
+                            <button class="active" >1</button>
+                            <button>2</button>
+                            <button>3</button>
+                            <button>4</button>
+                            <button>5</button>
+                            <button>Next</button>
+                        </div>
+                     </footer>
+                </div>
+               
+            </div>
+        </main>
+    </body>
+</html>

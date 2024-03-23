@@ -1,0 +1,848 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'poppins,san-serif';
+
+}
+/* body{
+    background: #eee9e5;
+    background: #D1B7A0;
+    background: #d1b7a0;
+} */
+.header{
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    padding: 25px 12.5%;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+.navbar a{
+    position: relative;
+    font-size: 1h-bar6px;
+    color: #000;
+    text-decoration: none;
+    font-weight: 500;
+    margin-right: 30px;
+}
+.search-bar{
+    width: 900px;
+    height: 229px;
+    background: #ffffff80;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    margin-top: 100px;
+    }
+    .welcome-banner{
+        height: 700px;
+    margin-top: 130px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    background: url(Images/img\ 1.png) no-repeat;
+    background-size: cover;
+    }
+    .welcome-banner h1{
+        margin-top: 150px;
+        font-family: "Parisienne", cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 60px;
+    }
+    .welcome-text {
+        
+        text-align: center; 
+    }
+    .welcome-text span{
+        margin-top: 150px;
+        font-family: "Parisienne", cursive;
+     font-weight: 800;
+     font-style: normal;
+     font-size: 19px;
+    }
+    .search-input span{
+        font-family: "Parisienne", cursive;
+     font-weight: 400;
+     font-style: normal;
+     font-size: 19px;
+    }
+    .welcome-banner label{
+     
+        font-family: "Parisienne", cursive;
+     font-weight: 400;
+     font-style: normal;
+     font-size: 19px;
+    }
+    .welcome-banner button{
+     
+        font-family: "Parisienne", cursive;
+     font-weight: 400;
+     font-style: normal;
+     font-size: 19px;
+    }
+   .search-input{
+    display: flex;
+    margin-top: 80px;
+    align-items: center;
+    width: 100%;
+    height: 55px;
+    padding: 0.375rem 0.75rem;
+    margin-left: 20px;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    /* color: #495057; */
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+   }
+   .search-input select{
+    margin-left: 80px;
+   }
+   .search-btn{
+    margin-left: 25px;
+    height:50px;
+    margin-top: 80px;
+
+   }
+   .search-btn .btn{
+    height:50px;
+    width: 110px;
+    margin-right: 50px;
+   }
+   .vendor-content{
+    display: flex;
+    flex-direction: column;
+   }
+   .vendor-content h1{
+    margin-top: 50px;
+    justify-content: center;
+    display: flex;
+   }
+ .vendor-content .row{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 400px;
+    justify-content: center;
+   }
+   .vendor-blocks{
+    background: white;
+    width: 294px;
+    height: 400px;
+    margin-left: 50px;
+    border-radius: 25px;
+    box-shadow: 0 2px 8px #00000026;
+   }
+   .vendor-blocks:hover{
+    transform: translateY(-10px);
+    transition: .5s;
+   }
+   .categories-content{
+    background: #ffffff;
+   }
+   .categories-content h1{
+    margin-top: 50px;
+    padding-top: 50px;
+    justify-content: center;
+    display: flex;
+    font-family: ProximaNova, ProximaNova-fallback-Arial, sans-serif;
+   }
+ .categories-content .row{
+    margin-top: 110px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 130px;
+    justify-content: space-evenly;
+    align-items: center;
+   }
+   .category-blocks{
+    width: 284px;
+    border: 1px solid #d9d9d9;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: -webkit-max-content;
+    grid-template-rows: max-content;
+    grid-template-areas:
+        "tileImage"
+        "tileContent";
+    position: relative;
+    background: #fff;
+    cursor: pointer;
+    height: 298px 
+   }
+   .category-blocks:hover{
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+    box-shadow: 0 2px 8px #00000026;
+   }
+   .footer{
+   
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+   }
+   .row .category-name{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.69rem 1rem;
+    font-weight: 600;
+    width: 100%;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: #222;
+    border-color: #d9d9d9;
+    transition: all .15s;
+    cursor: pointer;
+    background-position: center;
+    margin-left: 15px;
+   }
+   .row .category-names{
+    display: flex;
+    flex-direction: row;
+   }
+   .row .category-name:hover{
+    box-shadow: 0 2px 8px #00000026;
+   }
+   .vendor-blocks .author-image {
+    width: 294px;
+   }
+   .rating ul {
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+    margin-top: 10px;
+}
+.category-blocks .category-image {
+    width: 294px;
+   }
+   .rating li{
+    
+    display: inline-block;
+    margin-right: 5px;
+
+   }
+   .top-details p,h3{
+    margin-top: 10px;
+   }
+   .category-blocks .image img{
+ 
+    width: 100%;
+   }
+   .bottom-details{
+    margin-top: 10px;
+   }
+   .details{
+    margin-left: 5px;
+   }
+   .vendor-blocks .image img{
+    border-radius: 5%;
+    width: 100%;
+   }
+   .vendor-blocks .top-details{
+    border-bottom: 1px solid #ccc;
+   }
+   .author-image img{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    display: inline-block;
+}
+   .author-image{
+    display: flex;
+    flex-direction: row;
+    margin-left: 5px;
+   }
+   .author-image p{
+    margin-left: 10px;
+    margin-top: 10px;
+   }
+   .welcome-container{
+    height: 100%;
+margin-top: 130px;
+align-items: center;
+display: flex;
+flex-direction: column;
+width: 80%;
+border-radius: 25px;
+background: #e3bdb5;
+margin-left: 150px;
+
+}
+.welcome-container .welcome-text{
+    margin-top: 30px;
+}
+.welcome-container h2{
+    margin-top: 10px;
+    font-family: "Parisienne", cursive;
+font-weight: 400;
+font-style: normal;
+font-size: 60px;
+
+}
+.welcome-container h1{
+    margin-top: 10px;
+    font-family: "Parisienne", cursive;
+font-weight: 400;
+font-style: normal;
+font-size: 60px;
+margin-bottom: 30px;
+}
+/* .progress-blocks{
+    box-shadow: 0 1px 5px rgba(0,0,0,.15);
+    border-radius: 1rem;
+    padding: 1.5rem 1rem;
+    box-sizing: border-box;
+   
+    transition: box-shadow .2s;
+    height: 95px;
+    margin-top: 25px;
+    background: #fff;
+} */
+.welcome-container .row{
+    display: flex;
+    flex-direction: row;
+    height: 73px;
+    width: 920px;
+    justify-content: space-evenly;
+}
+.background{
+    background: #eee9e5;
+}
+
+.pending-tasks {
+    background-color: #FFF;
+    padding: 20px;
+    /* border-radius: 15px; */
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    width: 100%;
+    height: 200px;
+    margin-bottom: 20px;
+    border: 1px solid #d6d6da;
+}
+
+.pending-tasks h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.pending-tasks ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.pending-tasks li {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.pending-tasks .task-name {
+    font-weight: bold;
+}
+
+.pending-tasks .due-date {
+    color: #888;
+}
+.myservices .row{
+    display: flex;
+    flex-direction: row;
+}
+.myservices {
+    background-color: #fff;
+    padding: 20px;
+    /* border-radius: 15px;
+    border: 1px solid #d6d6da; */
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    width: 70%;
+    height: 500px 
+}
+
+.myservices h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.headings {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.headings span {
+    flex: 1;
+    font-weight: bold;
+}
+
+.service {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.service span {
+    flex: 1;
+}
+.events-container .row{
+    display: flex;
+    flex-direction: row;
+    height: 73px;
+    width: 100%;
+    justify-content: space-evenly;
+}
+.events-container h1, h2{
+font-family: "Parisienne", cursive;
+margin-bottom: 10px;
+}
+.events-container{
+    height: 100%;
+margin-top: 70px;
+display: flex;
+flex-direction: column;
+width: 80%;
+border-radius: 25px;
+/* background: white; */
+margin-left: 150px;
+height: 600px;
+}
+.favorites {
+    background-color: #fff;
+    padding: 20px;
+    /* border-radius: 15px; */
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    border: 1px solid #d6d6da;
+    margin-top: 10px;
+}
+
+.favorites h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.favorite-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.favorite-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.favorite-item p {
+    font-weight: bold;
+}
+ .column{
+    display: flex;
+    flex-direction: column;
+    margin-left: 60px;
+    width: 30%;
+}
+
+
+
+.filter select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.recommendations-section {
+    text-align: center;
+    margin-top: 20px;
+    height: 500px;
+    display: flex;
+    justify-content: space-between; 
+    margin: 0 auto; 
+    padding: 0 150px; 
+}
+
+.service-recommendations-container,
+.wedding-vendors {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    align-items: center;
+    border-radius: 15px;
+    height: 90%;
+    width: calc(50% - 30px);
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    border-radius: 1rem;
+}
+.service-recommendations-container + .wedding-vendors {
+    margin-left: 60px; 
+}
+@media screen and (max-width: 768px) {
+    .service-recommendations-container,
+    .wedding-vendors {
+        width: calc(50% - 20px); 
+    }
+
+    .recommendations-section {
+        padding: 0 20px;
+    }
+
+    .service-recommendations-container + .wedding-vendors {
+        margin-left: 20px; 
+    }
+}
+
+.service-recommendations {
+    margin-top: 30px;
+    display: flex;
+    transition: transform 0.3s ease;
+    
+}
+
+.service-recommendations .service-recommendation {
+    flex: 0 0 auto;
+    margin-right: 6px; 
+    background: #fff;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    width: 168px;
+    height: 216px;
+}
+
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.prev-btn {
+    left: 6px;
+}
+.service-recommendation .image{
+
+    height: 120px;
+    
+}
+
+.next-btn {
+    right: 10px;
+}
+.service-recommendation .image img{
+  width: 166px;
+    height: 120px;
+    border-radius: 15px;
+}
+.service-recommendations-container span{
+    font-size: 17px;
+    font-family: 'Parisienne';
+}
+.service-recommendations-container h3{
+    font-family: 'Parisienne';
+    margin-top: 20px;
+}
+.details h4, p{
+    font-family: 'Parisienne';
+}
+
+.wedding-vendors h3{
+    font-family: 'Parisienne';
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.vendor-recommendation .image{
+
+    height: 120px;
+    
+}
+
+
+.vendor-recommendation .image img{
+  width: 166px;
+    height: 120px;
+    border-radius: 15px;
+}
+.wedding-vendors .vendor-recommendation {
+    flex: 0 0 auto;
+    /* width: 300px;  */
+    margin-right: 6px; 
+    background: #fff;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    width: 168px;
+    height: 216px;
+}
+.vendor-recommendations{
+    margin-top: 30px;
+    display: flex;
+    transition: transform 0.3s ease;
+}
+.footer {
+    background-color: #eee9e5;
+    padding: 50px 0;
+    text-align: center;
+}
+
+.footer-heading {
+    margin-bottom: 20px;
+}
+
+.footer-buttons {
+    margin-bottom: 20px;
+}
+
+.footer-buttons .btn {
+    padding: 10px 20px;
+    background-color: #e3bdb5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.viewmorevendors-button .btn{
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #e3bdb5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.viewmoreservices-button .btn{
+    margin-top: 65px;
+    padding: 10px 20px;
+    background-color: #e3bdb5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.footer-columns {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.footer-column {
+    margin-right: 40px;
+    margin-top: 40px;
+    width: calc(100% - 70%);
+
+}
+
+.footer-column h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.footer-column ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.footer-column ul li {
+    margin-bottom: 5px;
+}
+
+.footer-column ul li a {
+    color: #343a40;
+    text-decoration: none;
+}
+.recommendations-content h1{
+    font-family: 'Parisienne';
+    text-align: center;
+    margin-bottom: 40px;
+}
+.services-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 150vh;
+   
+  }
+
+  .input-section,
+  .image-upload-section {
+    width: 48%;
+    padding: 20px;
+    box-sizing: border-box;
+
+  }
+  .image-upload-section {
+   background: white;
+   border-radius: 25px;
+  height: 50%;
+  width: 40%;
+  border: 1px solid #ccc;
+    margin-left: 250px;
+    margin-top: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .field-input-section {
+    margin-top: 150px;
+  margin-left: 50px;
+  width: 50%;
+  height: 70%;
+  padding-left: 50px;
+  }
+  .field-input-section h2,
+  .image-upload-section h2 {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  .form-control {
+    width: 79%;
+  border-radius: 50px;
+  height: 45px;
+  margin-left: 20px;
+  background: white;
+  border: 1px solid #ccc;
+    text-align:center;
+    margin-top: 20px;
+  }
+  .image-preview {
+    width: 40%;
+    height: 220px;
+    border: 2px dashed #ccc;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 5px;
+    /* width: 150px;
+    height: 150px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    border-radius: 5px; */
+    overflow: hidden;
+    position: relative;
+    margin-right:50px;
+    margin-top: 15px;
+
+  }
+  .image-preview .uploading{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: rgba(0, 0, 0, 0.3);
+  }
+  .image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+  .small-images-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .small-image-box {
+    width: calc(25% - 10px);
+    height: 80px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+  .small-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .field-input-section button{
+    margin-left: 20px;
+    margin-top: 50px;
+    padding: 10px 20px;
+  background-color: #e3bdb5;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  margin-right: 10px ;
+  cursor: pointer;
+  width: 79%;
+  height: 45px;
+  }
+  .icon-img {
+text-align: center;
+margin-bottom: 10px;
+}
+
+.icon-img i {
+color: #007bff;
+cursor: pointer;
+}
+
+.icon-img i:hover {
+color: #0056b3;
+}
+ .image-upload-section button{
+/* margin-left: 150px; */
+    margin-top: 50px;
+    padding: 10px 20px;
+  background-color: #e3bdb5;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  margin-right: 10px ;
+  cursor: pointer;
+  width: 45%;
+  height: 45px;
+}
+.form-group .description{
+    height: 100px;
+    border-radius: 25px;
+}
+.upload{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+.upload input{
+    display: none;
+}
