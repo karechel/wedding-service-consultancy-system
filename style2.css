@@ -15,12 +15,20 @@
     top:0;
     left:0;
     width: 100%;
-    padding: 25px 12.5%;
+    padding: 25px 12.5% 1% 12.5%;
     background: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 100;
+    border-bottom: 1px solid #ccc;
+}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    color: black;
 }
 .navbar a{
     position: relative;
@@ -29,6 +37,23 @@
     text-decoration: none;
     font-weight: 500;
     margin-right: 30px;
+}
+.navbar a::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 2px;
+    background: #e3bdb5;
+    border-radius: 5px;
+    transform: translateY(10px);
+    opacity: 0;
+    transition: 0.5s;
+}
+.navbar a:hover::after{
+    transform: translateY(0px);
+    opacity: 1;
 }
 .search-bar{
     width: 900px;
@@ -41,7 +66,7 @@
     }
     .welcome-banner{
         height: 700px;
-    margin-top: 130px;
+    /* margin-top: 130px; */
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -845,4 +870,211 @@ color: #0056b3;
 }
 .upload input{
     display: none;
+}
+
+.bx{
+    font-size :20px; 
+}
+.navbar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar ul li {
+    display: inline-block;
+    /* margin-right: 20px; */
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: black;
+}
+
+.right-section ul li {
+    display: inline-block;
+    /* margin-left: 20px; */
+}
+
+.right-section ul li a {
+    text-decoration: none;
+    color: black;
+}
+.right-section{
+    margin-left: 450px;
+}
+.uploaded-image {
+    width: 100%; /* Adjust as needed */
+    height: 200px; /* Maintain aspect ratio */
+  }
+  .sec-images {
+    display: flex;
+    flex-direction: row;
+}
+
+.main-image {
+    width: 100%;
+    height: 460px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    margin-left: 50px;
+}
+
+.sec-image {
+    width: 90%;
+    height: 220px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    margin-left: 50px;
+}
+
+.vendor-content {
+    display: flex;
+    flex-direction: row;
+    margin-top: 150px;
+}
+
+.all-details {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center horizontally */
+    margin-left: 250px;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-family: ProximaNova, ProximaNova-fallback-Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.details {
+    margin-bottom: 20px;
+}
+
+.gallery {
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #e3bdb5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 220px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+.vendor_name{
+    font-family: ProximaNova, ProximaNova-fallback-Arial, sans-serif;
+    font-size: 1.5rem;
+    line-height: 2.5rem;
+}
+.des{
+    font-size: 1rem;
+    font-family: ProximaNova, ProximaNova-fallback-Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    width: 70%;
+}
+.des_heading{
+    font-size: 1.25rem;
+    line-height: 2rem;
+    margin: 0 0 1rem;
+    font-family: ProximaNova, ProximaNova-fallback-Arial, sans-serif;
+}
+.service-content{
+    margin-left: 50px;
+    margin-bottom: 100px;
+}
+.service_heading{
+    font-size: 1.25rem;
+    line-height: 2rem;
+    margin: 0 0 1rem;
+    font-family: ProximaNova, ProximaNova-fallback-Arial, sans-serif;
+}
+.description-content{
+    margin-left: 50px;
+}
+.sec_images_two{
+    display: flex;
+    flex-direction: column;
+}
+.sec_images_one{
+    display: flex;
+    flex-direction: column;
+}
+.booking_container {
+    width: 80%;
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+h2 {
+    margin-top: 20px;
+    color: #333;
+}
+
+form {
+    display: grid;
+    grid-gap: 10px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+select {
+    width: 100%;
+}
+
+button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+label > input[type="checkbox"] {
+    margin-right: 5px;
 }

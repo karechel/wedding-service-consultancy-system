@@ -46,10 +46,10 @@ $bookingsCount = $statement3->fetchColumn();
                 <ul>
                <li><div class="dash-icon"><i class='bx bxs-dashboard'></i></div><a class="active" href="#">Dashboard</a></li>
                 <li> <div class="dash-icon"><i class='bx bxs-bookmark-heart'></i></div><a href="#">Bookings</a>
-                <li> <a href="BookingList.html">booking List</a></li>
-                <li> <a href="BookingDetails.html">Booking details</a></li>
+                <li> <a href="BookingList.php">booking List</a></li>
+                <li> <a href="BookingDetails.php">Booking details</a></li>
             </li>
-                <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="servicesV.html">services</a></li>
+                <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="servicesV.php">services</a></li>
                 <li><div class="dash-icon"><i class='bx bx-wallet-alt' ></i></div><a href="#">schedule</a></li>
                 <li><div class="dash-icon"><i class='bx bxs-report' ></i></div><a href="#">Reports</a></li>
             </ul>

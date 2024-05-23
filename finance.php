@@ -1,3 +1,28 @@
+<?php
+include 'connection.php'; // Ensure connection to the database
+ 
+$rows = [];
+try {
+    // SQL query to select data from the tables
+    $sql = "SELECT vendor_services.vendor_id, vendors.vendor_name, services.service_name, vendors.location, vendor_services.price, vendor_services.rating
+            FROM vendor_services
+            JOIN services ON vendor_services.service_id = services.service_id
+            JOIN vendors ON vendor_services.vendor_id = vendors.vendor_id";
+
+    // Execute query
+    $stmt = $pdo->query($sql);
+
+    // Fetch all rows as associative array
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Debug: Check if $rows is populated
+    // var_dump($rows); // Use this to verify if $rows contains data
+
+} catch (PDOException $e) {
+    // Handle errors gracefully
+    echo "Error: " . $e->getMessage();
+}
+?>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -26,21 +51,22 @@
                     <img class="profile-image" src="Images/pp1.jpeg" alt="">
                     <p class="role"> Manager    </p>
                     </div>
-                <div class="sidebar-menu ">
-                    <span   class="bx bx-sidebar dash"></span><p class="dash"><a href="adminDash.php"> Dashboard</a></p>
+                    <div class="sidebar-menu ">
+                    <span   class="bx bx-sidebar dash"></span><p class="dash"><a href="managerDash.php"> Dashboard</a></p>
                 </div>
                 <div class="sidebar-menu">
-                    <span class="bx bx-bookmark-heart"></span><p><a href="bookingsM.html">Bookings</a></p>
+                    <span class="bx bx-bookmark-heart"></span><p><a href="bookingsM.php">Bookings</a></p>
                 </div>
                 <div class="sidebar-menu">
-                    <span class="bx bx-user"></span><p> <a href="vendorsM.html"> Vendors</a></p>
+                    <span class="bx bx-user"></span><p> <a href="vendorsM.php"> Vendors</a></p>
                 </div>
                 <div class="sidebar-menu">
-                    <span class="bx bx-wallet-alt"></span><p>Finance</p>
+                    <span class="bx bx-wallet-alt"></span><p><a href="finance.php">Finance</a></p>
                 </div>
                 <div class="sidebar-menu">
                     <span  class='bx bx-objects-horizontal-left' ></span><p>Reports</p>
                 </div>
+               
                
             </div>
             <!--Maindashboard--> 

@@ -110,44 +110,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $user_id;
                 echo "User registered successfully with user_id: $user_id";
         }
-        elseif(isset($_POST['add-service'])) {
-            // service  form submission
-            // $user_id = $_SESSION['user_id'];
-            // $image = $_POST['image'];
-            $price = $_POST['price'];
-            $description = $_POST['description'];
-                       
 
-          
-            // Insert into the clients table with the obtained user_id
-            $sql = "INSERT INTO vendor_services (price, other_service_details) 
-            VALUES (:price, :description)";
-    $stmt = $pdo->prepare($sql);
-  
-    $stmt->bindParam(':price', $price);
-    $stmt->bindParam(':description', $description);
-    $stmt->bindParam(':image', $image);
-    $stmt->execute();
-
-    echo "Service record inserted successfully";
-} elseif(isset($_FILES['image'])&& $_FILES['image']['error']==0) {
-    // service  form submission
-    // $user_id = $_SESSION['user_id'];
-    $image =($_FILES['image']['tmp_name']); 
-               
-
-  
-    // Insert into the clients table with the obtained user_id
-    $sql = "INSERT INTO vendor_services (image) 
-    VALUES (:image)";
-$stmt = $pdo->prepare($sql);
-
-
-$stmt->bindParam(':image', $image);
-$stmt->execute();
-
-echo "image  inserted successfully";
+elseif(isset($_POST['add-service'])) {
+    if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        // Read image data
+        $imageData = file_get_contents($_FILES['image']['tmp_name']);
+        
+        // Get other form data
+        $price = $_POST['price'];
+        // $category = $_POST['category'];
+        $description = $_POST['description'];
+        
+        // Prepare SQL statement
+        $sql = "INSERT INTO vendor_services (price, other_service_details, image) VALUES (:price,  :description, :imageData)";
+        $stmt = $pdo->prepare($sql);
+        
+        // Bind parameters
+        $stmt->bindParam(':price', $price);
+        // $stmt->bindParam(':category', $category);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':imageData', $imageData, PDO::PARAM_LOB);
+        
+        // Execute the statement
+        if ($stmt->execute()) {
+            echo "File uploaded successfully.";
+        } else {
+            echo "Error uploading file.";
+        }
+    } else {
+        echo "No file uploaded or error occurred while uploading.";
+    }
+      
 }
+
 
         else {
             echo "Error: Invalid form submission.";

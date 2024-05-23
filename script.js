@@ -6,6 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const userOptions = document.getElementsByName('role');
     const registerForm = document.querySelector('.form-box.register form');
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const registerParam = urlParams.get('register');
+
+    if (registerParam === 'true') {
+        // Open the sign-up form
+        if (logregBox) {
+            logregBox.classList.add('active');
+            logregBox.classList.remove('setup-client-active', 'setup-vendor-active');
+        }
+    }
+
     if (registerLink) {
         registerLink.addEventListener('click', (event) => {
             event.preventDefault();
@@ -192,4 +203,50 @@ function validateSetupVendorForm() {
     } 
     return true; // Form is valid
 }
+
+function toggleHeart(element) {
+    if (element.classList.contains('bx-heart')) {
+      // If it's the regular heart, change to solid red heart
+      element.classList.remove('bx-heart');
+      element.classList.add('bxs-heart');
+      element.style.color = '#ff0000';
+    } else {
+      // If it's the solid red heart, change back to regular heart
+      element.classList.remove('bxs-heart');
+      element.classList.add('bx-heart');
+      element.style.color = ''; // Remove the color style
+    }
+  }
+  document.getElementById('weddingServicesLink').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent the default link behavior
+
+    var dropdown = document.getElementById('servicesDropdown');
+    dropdown.classList.toggle('show');
+
+    if (dropdown.classList.contains('show')) {
+        loadServices();
+    }
+});
+document.addEventListener('DOMContentLoaded', function() {
+    var selectElement = document.getElementById('servicesSelect');
+
+    selectElement.addEventListener('change', function() {
+        var serviceCategory = this.value;
+        fetch('getServices.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'category=' + encodeURIComponent(serviceCategory)
+        })
+        .then(response => response.json())
+        .then(services => {
+            // Process the retrieved services
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+
 

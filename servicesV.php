@@ -1,3 +1,45 @@
+<?php
+// Start session
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect the user to the login page if not logged in
+    header("Location: index.html");
+    exit();
+}
+
+include 'connection.php'; // Ensure connection to the database
+
+$user_id = $_SESSION['user_id'];
+$rows = [];
+
+try {
+    // SQL query to select data from the tables
+    $sql = "SELECT services.service_name, vendor_services.other_service_details,vendor_services.price, vendor_services.image,vendor_services.rating
+            FROM vendor_services
+            JOIN services ON vendor_services.service_id = services.service_id
+            JOIN vendors ON vendor_services.vendor_id=vendors.vendor_id
+            WHERE vendors.user_id = :user_id";
+
+    // Prepare the statement
+    $stmt = $pdo->prepare($sql);
+
+    // Bind the user_id parameter
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+
+    // Execute query
+    $stmt->execute();
+
+    // Fetch all rows as associative array
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    // Handle errors gracefully
+    echo "Error: " . $e->getMessage();
+}
+?>
+
 <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -24,19 +66,22 @@
             <div class="sidebar">
                 <div class="user-image">
                     <img class="profile-image" src="Images/pp1.jpeg" alt="">
-                    <p class="role"> Manager    </p>
+                    <p class="role"> Venodr    </p>
                     </div>
                 <div class="sidebar-menu ">
-                    <span   class="bx bx-sidebar dash"></span><p class="dash"><a href="adminDash.php"> Dashboard</a></p>
+                    <span   class="bx bx-sidebar dash"></span><p class="dash"><a href="vendorDash.php"> Dashboard</a></p>
                 </div>
                 <div class="sidebar-menu">
-                    <span class="bx bx-bookmark-heart"></span><p><a href="bookingsM.html">Bookings</a></p>
+                 <span class='bx bxs-bookmark-heart'></span><p><a style="text-decoration: none; color:black;" href="BookingList.php">Bookings List</a></p>
+              </div>
+                <div class="sidebar-menu">
+                <span class='bx bxs-bookmark-heart'></span><p><a style="text-decoration: none; color:black;"href="BookingDetails.php">Bookings details</a></p>
+                  </div>
+                <div class="sidebar-menu">
+                    <span class="bx bx-user"></span><p> <a href="servicesV.php"> services</a></p>
                 </div>
                 <div class="sidebar-menu">
-                    <span class="bx bx-user"></span><p> <a href="vendorsM.html"> Vendors</a></p>
-                </div>
-                <div class="sidebar-menu">
-                    <span class="bx bx-wallet-alt"></span><p>Finance</p>
+                    <span class="bx bx-wallet-alt"></span><p><a href=".php">schedule</a></p>
                 </div>
                 <div class="sidebar-menu">
                     <span  class='bx bx-objects-horizontal-left' ></span><p>Reports</p>
@@ -48,7 +93,7 @@
             <div class="dashboard-container">
                
                 <div class="card detail">
-                    <h2>Booking List</h2>
+                    <h2>My Services</h2>
                      <div class="detail-header">
                                            
                         <div class="filterEntries">
@@ -83,46 +128,54 @@
                      <table>
                         <thead>
                         <tr>
-                            <th>Booking #</th>
-                            <th>Client</th>
-                            <th>Booking Date</th>
-                            <th>Event Date</th>                            
-                            <th>Service Booked</th>
-                            <th>Booking status</th>
-                            <th>Payment status</th>
+                            <th>service Name </th>
+                            <th>Description</th>
+                            <th>Pricing </th>
+                            <th>Image </th>                            
+                            <th>Rating</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- <tr><td class="empty" colspan="11" style="text-align: center;">No data Available in table</td></tr> -->
+                    <?php foreach ($rows as $row): ?>  
+                    <!-- <tr><td class="empty" colspan="11" style="text-align: center;">No data Available in table</td></tr> -->
                         <tr>
-                            <td>BK-0001</td>
-                            <td>Jane Wairimu</td>
-                            <td>5/09/2023</td>
-                            <td>6/03/2024</td>
-                            <td>Venue</td>
-                            <td><span class="status fullfilled">Pending</span></td>
-                            <td><span class="status onprogress">Due</span></td>
+                            <td>
+                            <?php echo $row['service_name']; ?>    
+                        
+                            </td>
+                            <td>
+                            <?php echo $row['other_service_details']; ?>   
+                               
+                            </td>
+                            <td>
+                            <?php echo $row['price']; ?>   
+                            </td>
+                            <td>
+                                
+                                <?php
+                    if ($row && !empty($row['image'])) {
+                        // Encode the image data as a base64 string
+                        $imageData = base64_encode(stream_get_contents($row['image']));
+                        echo '<img src="data:image/jpeg;base64,' . $imageData . '" alt="Uploaded Image" class="uploaded-image"> ';
+                        
+                    } else {
+                        echo "Image not found or empty.";
+                    }
+                     ?>  
+                                </td>
+                                <td>
+                            <?php echo $row['rating']; ?>   
+                                </td>
+                           
                             <td>
                                 <i class='bx bx-low-vision'></i>
                                 <i class='bx bx-pencil'></i>
                                 <i class='bx bx-trash' ></i>
                             </td>
                         </tr>
-                        <tr>
-                            <td>BK-0001</td>
-                            <td>Natalie Kerring</td>
-                            <td>25/09/2023</td>
-                            <td>26/03/2024</td>
-                            <td>Venue</td>
-                            <td><span class="status confirmed">Booked</span></td>
-                            <td><span class="status onprogress">Paid</span></td>
-                            <td>
-                                <i class='bx bx-low-vision'></i>
-                                <i class='bx bx-pencil'></i>
-                                <i class='bx bx-trash' ></i>
-                            </td>
-                        </tr>
+                        <?php endforeach; ?>   
+                      
                     </tbody>
                      </table>
                      <footer>

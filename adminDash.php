@@ -45,10 +45,10 @@ $bookingsCount = $statement3->fetchColumn();
             </div>
             <div class="dashboard-menu">
                 <ul>
-               <li><div class="dash-icon"><i class='bx bxs-dashboard'></i></div><a class="active" href="#">Dashboard</a></li>
-                <li> <div class="dash-icon"><i class='bx bxs-bookmark-heart'></i></div><a href="bookingsM.html">Bookings</a></li>
-                <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="#">Vendors</a></li>
-                <li><div class="dash-icon"><i class='bx bx-wallet-alt' ></i></div><a href="#">Finance</a></li>
+               <li><div class="dash-icon"><i class='bx bxs-dashboard'></i></div><a class="active" href="adminDash.php">Dashboard</a></li>
+                <li> <div class="dash-icon"><i class='bx bxs-bookmark-heart'></i></div><a href="bookingsM.php">Bookings</a></li>
+                <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="vendorsM.php">Vendors</a></li>
+                <li><div class="dash-icon"><i class='bx bx-wallet-alt' ></i></div><a href="finance.php">Finance</a></li>
                 <li><div class="dash-icon"><i class='bx bxs-report' ></i></div><a href="#">Reports</a></li>
             </ul>
            <button><a href="#">Logout</a></button>
@@ -57,32 +57,7 @@ $bookingsCount = $statement3->fetchColumn();
         </div>
 
         <div class="main-content">
-            <!-- <div class="details-lists">
-            <div class="single-list-one">
-    <div class="list-icon">
-        <i class='bx bx-check-circle bx-tada bx-flip-vertical' style='color:darkblue; font-size: 36px;'></i>
-    </div>
-    <h3></h3>
-    <span>Total Number of Clients</span>
-</div>
-
-<div class="single-list-two">
-    <div class="list-icon">
-        <i class='bx bx-bolt-circle bx-rotate-90 bx-tada' style='color:darkblue; font-size: 36px;'></i>
-    </div>
-    <h3></h3>
-    <span>Total Number of Vendors</span>
-</div>
-
-<div class="single-list-three">
-    <div class="list-icon">
-        <i class='bx bx-book-heart bx-rotate-90 bx-tada' style='color:darkblue; font-size: 36px;'></i>
-    </div>
-    <h3></h3>
-    <span>Total Number of Bookings</span>
-</div>
-</div> -->
-<!-- <main> -->
+            
             <div class="dashboard-container">
                 <!-- cards -->
                 <div class="card total1">
