@@ -4,12 +4,11 @@ include 'connection.php'; // Ensure connection to the database
 $rows = [];
 try {
     // SQL query to select data from the tables
-    $sql = "SELECT services.service_name, vendor_services.price, vendor_services.rating ,vendors.location,vendor_services.image
+    $sql = "SELECT services.service_name, vendor_services.price, vendor_services.rating ,vendors.location,vendors.vendor_name,vendor_services.image, vendors.vendor_id
     FROM services
     JOIN vendor_services ON services.service_id = vendor_services.service_id
-    JOIN vendors ON vendor_services.vendor_id=vendors.vendor_id
-    WHERE services.service_name = 'Photography and Videography'";
-   
+    JOIN vendors ON vendor_services.vendor_id=vendors.vendor_id";
+    
 
     // Execute query
     $stmt = $pdo->query($sql);
@@ -38,41 +37,49 @@ try {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .service-content .row {
+    margin-top: 70px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 150px;
+    justify-content: center;
+}
+.service-blocks {
+    background: white;
+    width: 294px;
+    height: 150px;
+    margin-left: 50px;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px #00000026;
+}
+.service-blocks .top-details {
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+}
+.image {
+    position: relative;
+    margin-top: 10px;
+}
+.author-image {
+    display: flex;
+    flex-direction: row;
+    margin-left: 5px;
+    justify-content: center;
+}
+    </style>
     </head>
     <body>
         <div class="background">
-        <header class="header">
-            <nav class="navbar">
-                <a href="client.php">My Dashboard</a>
-               <a href="Weddingservices.php"> Wedding services</a>
-               <div id="servicesDropdown">
-                <select id="servicesSelect">
-                    <option value="Venue Booking">Venue</option>
-                    <option value="catering">catering</option>
-                </select>
-               </div>
-               <a href="Weddingvendors.php">Vendors</a>
-               <div class="right-section">
-                <ul>
-                    <li><a href="#"><i class='bx bx-bell' ></i> </a></li>
-                    <li><a href="#"><i class='bx bx-envelope' ></i> </a></li>
-                    <li><a href="#"><i class='bx bx-user' ></i> </a></li>
-                   
-                </ul>
-            </div>
-            </nav>
-         
-          </header>
+     <?php include 'clientHeader.php'; ?>
        
           <div class="container">
             <div class="content">
              
-                <div class="filter-city">
-                    <label for="search">Search:</label>
-                    <input type="search" name="" id="search" placeholder="City/ Town">
-                </div>
+             
                 <div class="service-content" id="service-content">
-              
                     <div class="row">
                     <?php $count = 0; ?>
                     <?php foreach ($rows as $row): ?> 
@@ -81,37 +88,30 @@ try {
             <?php endif; ?>
                     <div class="service-blocks">
                         <div class="image">
-                       <?php
-                    if ($row && !empty($row['image'])) {
-                        // Encode the image data as a base64 string
-                        $imageData = base64_encode(stream_get_contents($row['image']));
-                        echo '<img src="data:image/jpeg;base64,' . $imageData . '" alt="Uploaded Image" class="uploaded-image"> ';
-                        
-                    } else {
-                        echo "Image not found or empty.";
-                    }
-                     ?>  
-                    
-                            
-                            <i class="bx bx-heart" style="cursor: pointer;" onclick="toggleHeart(this)"></i>
+                                                 
+                               <div class="vendor">
+                                <div class="author-image">
+                                    <a href=""><img src="Images/pp.jpeg" alt=""></a>
+                                    <p class="name"><?php echo $row['vendor_name']; ?></p>
+                                </div>
+                            </div>
+                         
                  
                     </div>
                     <div class="details">
                         <div class="top-details">
                             <h3 class="category-title"><?php echo $row['service_name']; ?></h3>
                            
-                            <ul class="rating">
-                                <li>
-                                    <i class='bx bxs-star' style='color:#ddc04c'  ></i> <?php echo $row['rating']; ?>
-                                    <p float-right><?php echo $row['location']; ?>, Kenya</p>
-                                </li>
-                               
+                                                       
                                 
                             </div>
                             <div class="bottom-details">
-                                <span>Price: Ksh <?php echo $row['price']; ?></span>
+                              
                                 <div class="block-buttons">
-                                    <button class=" btn"><a href="book.html">Book Now</a></button>
+                                <button class="btn">
+                                 <a href="rating.php?vendor_id=<?php echo $row['vendor_id']; ?>" style="text-decoration: none; color: inherit;">Rate Vendor</a>
+                                </button>
+                            
                                 </div>
                             </div>
                     </div>                  
@@ -120,6 +120,7 @@ try {
                     <?php $count++; ?>
                                       <?php endforeach; ?>   
                 </div>
+                
                 </div>
                 <footer class="footer">
                     <div class="footer-heading">

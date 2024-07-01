@@ -8,24 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
-<header class="header">
-            <nav class="navbar">
-                <a href="home.html">Home</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
-               <a href="Weddingservices.php"> Wedding services</a>
-               <a href="Weddingvendors.php">Vendors</a>
-               <div class="right-section">
-                <ul>
-                    <li><a href="#"><i class='bx bx-bell' ></i> </a></li>
-                    <li><a href="#"><i class='bx bx-envelope' ></i> </a></li>
-                    <li><a href="#"><i class='bx bx-user' ></i> </a></li>
-                   
-                </ul>
-            </div>
-            </nav>
-         
-          </header>
+    <?php include 'clientHeader.php' ?>
     <?php
     include 'connection.php'; // Ensure connection to the database
     if(isset($_GET['vendor_id'])) {
@@ -79,10 +62,10 @@
             <div class="details"><?php echo $vendorDetails['location']; ?></div>
             <div class="details"><?php echo $vendorDetails['rating']; ?></div>
             <div class="details"><?php echo $vendorDetails['price']; ?></div>
-            <button>
-    <a href="book.php?vendor_id=<?php echo $vendorDetails['vendor_id']; ?>" style="text-decoration: none; color: inherit;">Book Now</a>
-</button>
-
+            <form action="books_test.php" method="GET">
+            <input type="hidden" name="vendor_id" value="<?php echo $vendorDetails['vendor_id']; ?>">
+            <button type="submit"> Book Now</button>
+            </form>
         </div>
     </div>
     <div class="description-content">

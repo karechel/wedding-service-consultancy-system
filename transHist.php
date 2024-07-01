@@ -1,32 +1,48 @@
 <?php
 include 'connection.php'; // Ensure connection to the database
- 
+include 'login.php';
+
+// session_start(); // Start session to access session variables
+
 $rows = [];
 try {
-    // SQL query to select data from the tables
-    $sql = "SELECT bookings.booking_id, clients.first_name, clients.last_name, vendors.vendor_name, services.service_name, bookings.booking_date, bookings.status, bookings.payment_status, bookings.event_date
-            FROM bookings
-            JOIN clients ON bookings.client_id = clients.client_id
-            JOIN services ON bookings.service_id = services.service_id
-            JOIN vendors ON bookings.vendor_id = vendors.vendor_id";
+    // Check if the user is logged in and get their user_id
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
 
-    // Execute query
-    $stmt = $pdo->query($sql);
+        // SQL query to select data from the tables filtered by the logged-in user
+        $sql = "SELECT bookings.booking_id, clients.first_name, clients.last_name, vendors.vendor_name, services.service_name, bookings.booking_date, bookings.status, bookings.payment_status, bookings.event_date
+                FROM bookings
+                JOIN clients ON bookings.client_id = clients.client_id
+                JOIN services ON bookings.service_id = services.service_id
+                JOIN vendors ON bookings.vendor_id = vendors.vendor_id
+                WHERE clients.user_id = :user_id";
 
-    // Fetch all rows as associative array
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Prepare and execute query
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Fetch all rows as associative array
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        // Handle case where user is not logged in
+       
+    }
 
 } catch (PDOException $e) {
     // Handle errors gracefully
     echo "Error: " . $e->getMessage();
 }
 ?>
+
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=poppins&display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=poppins&display=swap">
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -99,17 +115,7 @@ try {
         font-size: 18px;
         cursor: pointer;
 }
-    .navbar {
-    padding-left: 70px;
-    height: 4rem;
-    }
-        .navbar a{
-            left: 87%;
-            font-size: 1.3rem;
-        }
-        .navbar img{
-            margin-left: 80px;
-        }
+   
         .modal {
             display: none;
             position: fixed;
@@ -185,60 +191,32 @@ try {
             position:static ;
             font-size: 1rem;
         }
+        main{
+            padding: 10rem 15rem 10rem 10rem;
+        }
+        main{
+    padding: 90px 45px 0 45px;
+}
+.dashboard-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.detail{
+    width: 100%;
+}
     </style>
     </head>
     <body>
       
-       <header class="header">
-            <nav class="navbar">
-                <img src="Images/logo.jpg" width="80" height="60">
-                <a href="#"><i class='bx bx-bell'></i></a>
-                <a href=""><i class='bx bx-message'></i></a>
-                <div class="dropdown-container">
-            <button class="dropdown-btn"><i class='bx bx-user-circle'></i></button>
-             <div class="dropdown-menu">
-             <a href="#"><i class='bx bx-user-circle'></i> Profile</a>
-            <a href="#"><i class='bx bx-cog bx-flip-horizontal' ></i> Settings</a>
-             <div class="divider"></div>
-             <a href="logout.php"><i class='bx bx-exit bx-flip-horizontal'></i> Sign Out</a>
-         </div>
-        </div>
-            </nav>
-        </header>
-            <!--sidebar--> 
-            <input type="checkbox" id="toggle" >
-            <label class="side-toggle" for="toggle"><span ><i class='bx bxs-dashboard' ></i></span></label>
-            <div class="sidebar">
-                <div class="user-image">
-                    <img class="profile-image" src="Images/pp1.jpeg" alt="">
-                    <p class="role"> Manager    </p>
-                    </div>
-                <div class="sidebar-menu ">
-                    <span   class="bx bx-sidebar dash"></span><p class="dash"><a href="managerDash.php"> Dashboard</a></p>
-                </div>
-                <div class="sidebar-menu">
-                    <span class="bx bx-bookmark-heart"></span><p><a href="bookingsM.php">Bookings</a></p>
-                </div>
-                <div class="sidebar-menu">
-                    <span class="bx bx-user"></span><p> <a href="vendorsM.php"> Vendors</a></p>
-                </div>
-                <div class="sidebar-menu">
-                    <span class="bx bx-user"></span><p> <a href="ClientM.php"> Clients</a></p>
-                </div>
-                <div class="sidebar-menu">
-                    <span class="bx bx-wallet-alt"></span><p><a href="finance.php">Finance</a></p>
-                </div>
-                <div class="sidebar-menu">
-                    <span  class='bx bx-objects-horizontal-left' ></span><p>Reports</p>
-                </div>
-               
-            </div>
+    <?php include 'clientHeader.php'; ?>
+        
             <!--Maindashboard--> 
             <main>
             <div class="dashboard-container">
                
                 <div class="card detail">
-                    <h2>All Bookings</h2>
+                    <h2>My Transactions</h2>
                      <div class="detail-header">
                                            
                         <div class="filterEntries">
@@ -251,10 +229,9 @@ try {
                                 </select> entries
                             </div> -->
                             <div class="button-container">
-                        <button id="" class="filter-button" >Confirmed</button>
-                        <button id="" class="filter-button" >Pending</button>
-                        <button id="" class="filter-button" >Cancelled</button>
-                    </div>
+                        <button id="" class="filter-button" >History</button>
+                        <button id="" class="filter-button" >Outstanding</button>
+                                   </div>
                             <div class="filter">
                                 
                                 <input type="search" name="" id="search" placeholder="Search bookings">
@@ -263,48 +240,26 @@ try {
                         <div class="addBookingBtn">
                             <button><span class="material-symbols-outlined">add</span>Add</button>
                         </div> 
-                        <!-- <select id="filterDropdown">
-                            <option value="all">All</option>
-                            <option value="category2">Booked</option>
-                            <option value="category1">Pending</option>
-                            <option value="category2">Cancelled</option>
-                            <option value="category1">Paid</option>
-                            <option value="category2">Due</option>
-                            
-                        </select> -->
+                       
                    
                      </div>
                      <!-- end of header section -->
                      <table>
     <thead>
         <tr>
-            <th>Booking #</th>
-            <th>Client</th>
-            <th>Booking Date</th>
-            <th>Event Date</th>
-            <th>Service Booked</th>
-            <th>Vendor</th>
-            <th>Booking status</th>
-            <th>Payment status</th>
-            <th>Action</th>
+            <th>Service</th>
+            <th>Payment Date</th>
+            <th>Amount</th>
+            <th>Method</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($rows as $row): ?>
             <tr data-booking-id="<?php echo $row['booking_id']; ?>">
                 <td><?php echo $row['booking_id']; ?></td>
-                <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
                 <td><?php echo $row['booking_date']; ?></td>
                 <td><?php echo $row['event_date']; ?></td>
                 <td><?php echo $row['service_name']; ?></td>
-                <td><?php echo $row['vendor_name']; ?></td>
-                <td><?php echo $row['status']; ?></td>
-                <td><span class="status fullfilled"><?php echo $row['payment_status']; ?></span></td>
-                <td>
-                    <i class="material-symbols-outlined view">visibility</i>
-                    <span class="material-symbols-outlined edit">edit</span>
-                    <span class="material-symbols-outlined delete">delete</span>
-                </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
@@ -324,7 +279,7 @@ try {
         </form>
     </div>
 </div>
-                     <footer>
+                     <!-- <footer>
                         <span>showing 1 of 10 of 50 entries</span>
                         <div class="pagination">
                             <button>prev</button>
@@ -335,7 +290,7 @@ try {
                             <button>5</button>
                             <button>Next</button>
                         </div>
-                     </footer>
+                     </footer> -->
                 </div>
                
             </div>
@@ -423,9 +378,10 @@ try {
     });
 });
 
- //dropdown menu
+
+        //dropdown menu
        
- document.querySelector('.dropdown-btn').addEventListener('click', function() {
+    document.querySelector('.dropdown-btn').addEventListener('click', function() {
         const dropdownMenu = document.querySelector('.dropdown-menu');
         dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
     });

@@ -1,35 +1,65 @@
 <?php
-include 'connection.php';
-$pdo = new PDO($dsn, $user, $password);
+include 'connection.php'; // Ensure connection to the database
+include 'login.php';
 
-$statement1 = $pdo->query('SELECT COUNT(*) FROM clients');
-$clientsCount = $statement1->fetchColumn();
+// session_start(); // Start session to access session variables
+if (!isset($_SESSION['username'])) {
+    // If not logged in, redirect to the login page
+    header("Location: login.html");
+    exit();
+}
+$vendor_name = '';
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
 
-$statement2 = $pdo->query('SELECT COUNT(*) FROM vendors');
-$vendorsCount = $statement2->fetchColumn();
+    try {
+        // SQL query to fetch vendor name
+        $stmt = $pdo->prepare("SELECT vendor_name FROM vendors WHERE user_id = :user_id");
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
 
-$statement3 = $pdo->query('SELECT COUNT(*) FROM bookings');
-$bookingsCount = $statement3->fetchColumn();
+        // Fetch vendor name
+        $vendor = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($vendor) {
+            $vendor_name = $vendor['vendor_name'];
+        }
+    } catch (PDOException $e) {
+        // Handle errors gracefully
+        echo "Error: " . $e->getMessage();
+    }
+}
 $rows = [];
 try {
-    // SQL query to select data from the tables
-    $sql = "SELECT bookings.booking_id, clients.first_name, clients.last_name, vendors.vendor_name, services.service_name, bookings.booking_date, bookings.status, bookings.payment_status, bookings.event_date
-            FROM bookings
-            JOIN clients ON bookings.client_id = clients.client_id
-            JOIN services ON bookings.service_id = services.service_id
-            JOIN vendors ON bookings.vendor_id = vendors.vendor_id";
+    // Check if the user is logged in and get their user_id
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
 
-    // Execute query
-    $stmt = $pdo->query($sql);
+        // SQL query to select data from the tables filtered by the logged-in user
+        $sql = "SELECT bookings.booking_id, clients.first_name, clients.last_name, vendors.vendor_name, services.service_name, bookings.booking_date, bookings.status, bookings.payment_status, bookings.event_date
+                FROM bookings
+                JOIN clients ON bookings.client_id = clients.client_id
+                JOIN services ON bookings.service_id = services.service_id
+                JOIN vendors ON bookings.vendor_id = vendors.vendor_id
+                WHERE vendors.user_id = :user_id";
 
-    // Fetch all rows as associative array
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Prepare and execute query
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Fetch all rows as associative array
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        // Handle case where user is not logged in
+        echo "You must be logged in to view this page.";
+    }
 
 } catch (PDOException $e) {
     // Handle errors gracefully
     echo "Error: " . $e->getMessage();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -52,13 +82,18 @@ try {
 }
 .info .bx-dots-vertical-rounded{
     display: flex;
-    margin-right: -10px;
+    margin-right: -80px;
     justify-content: right;
 }
 .info-detail h2 {
     font-size: 4rem;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-
+    justify-content: center;
+    display: flex;
+}
+.info-detail h2 span{
+    font-size: 4rem;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 .info-detail h3 {
     font-size: 1rem;
@@ -74,6 +109,10 @@ try {
     display: flex;
     margin-top: 20px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.info-detail h4 span{
+    margin-left:1px;
+    font-size: larger;
 }
 .container-content {
     padding-bottom: 100px;
@@ -103,7 +142,6 @@ try {
     width: 100%;
     background: #fff;
     border-radius: 10px;
-    margin-bottom: 30px;
 }
 .summaries{
     position: relative;
@@ -185,10 +223,6 @@ try {
 
             color: #22c55e;
         }
-        .total5 h2,
-        .total5 h3{
-            color: #f59e0b;
-        }
         .bx-dots-vertical-rounded {
             cursor: pointer;
             margin-bottom: 10px;
@@ -216,14 +250,6 @@ try {
         .options a:hover {
             background-color: #e2e8f0;
         }
-        .total4 {
-         grid-column: 4 / span 1;
-        grid-row: 1 / span 1;
-        }
-        .total5 {
-        grid-column: 5 / span 1;
-        grid-row: 1 / span 1;
-        }
        .overview .total1 h2,
        .overview .total1 h3{
 
@@ -237,11 +263,10 @@ try {
         .overview .total1{
             background: #eef2ff;
             margin: 0 15px 0 0;
-            height: 189px;
+            height: 160px;
         }
         .overview .total2{
             background: #f0fdf4;
-            height: 189px;
         }
        .bookings-details{
         position: relative;
@@ -269,7 +294,7 @@ try {
             background: #fff;
             margin-top: 30px;
             display: flex;
-            width: 60%;
+            width: 100%;
             flex-direction: column;
         }
 
@@ -298,6 +323,7 @@ try {
         }
         .finance-summaries{
             width: 100%;
+            border: 1px solid #e3e6ed; 
             display: flex;
             justify-content: center;
         }
@@ -390,21 +416,6 @@ try {
             position:static ;
             font-size: 1rem;
         }
-        .material-symbols-outlined {
-        font-size: 18px;    
-}
-.detail {
-    width: 1000px;
-    grid-row: 1 / span 1;
-    margin-bottom: 50px;
-}
-.dashboard-container {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    grid-template-rows: auto auto 1fr;
-    gap: 1rem;
-    width: 1000px;
-}
         </style>
     </head>
     <body>
@@ -419,7 +430,7 @@ try {
         <a href="#"><i class='bx bx-user-circle'></i> Profile</a>
         <a href="#"><i class='bx bx-cog bx-flip-horizontal' ></i> Settings</a>
         <div class="divider"></div>
-        <a href="#"><i class='bx bx-exit bx-flip-horizontal' ></i> Sign Out</a>
+        <a href="logout.php"><i class='bx bx-exit bx-flip-horizontal'></i> Sign Out</a>
     </div>
 </div>
             </nav>
@@ -432,16 +443,16 @@ try {
             <div class="user-image">
             <img src="Images/pp.jpeg" alt="">
             <h3>
-                Jane Doe<br>
-                <span>Manager</span>
+            <?php echo htmlspecialchars($vendor_name); ?>  </span>
+                <span>Vendor</span>
             </h3>
             </div>
             <div class="dashboard-menu">
                 <ul>
-               <li><div class="dash-icon"><i class='bx bxs-dashboard'></i></div><a class="active" href="ManagerDash.php">Dashboard</a></li>
-                <li> <div class="dash-icon"><i class='bx bxs-bookmark-heart'></i></div><a href="bookingsM.php">Bookings</a></li>
-                <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="vendorsM.php">Vendors</a></li>
-                <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="clientM.php">Clients</a></li>
+               <li><div class="dash-icon"><i class='bx bxs-dashboard'></i></div><a class="active" href="vendorD.php">Dashboard</a></li>
+                <li> <div class="dash-icon"><i class='bx bxs-bookmark-heart'></i></div><a href="BookingList.php">Bookings</a></li>
+                <li> <div class="dash-icon"><i class='bx bxs-bookmark-heart'></i></div><a href="BookingList.php">Services</a></li>
+                <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="clientV.php">Clients</a></li>
                 <li><div class="dash-icon"><i class='bx bx-wallet-alt' ></i></div><a href="finance.php">Finance</a></li>
                 <li><div class="dash-icon"><i class='bx bxs-report' ></i></div><a href="#">Reports</a></li>
             </ul>
@@ -451,169 +462,92 @@ try {
         </div>
 
         <div class="main-content">
-
-            <div class="dashboard-container">
-                <!-- cards -->
-                <div class="card total1">
-                    <div class="info">
-                      <div class="info-detail">
-                      <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
+        <div class="dashboard-container">
+    <!-- card for clients -->
+    <div class="card total1">
+        <div class="info">
+            <div class="info-detail">
+                <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
                 <div class="options">
-                    <a href="#">Yesterday</a>
-                    <a href="#">2 days ago</a>
-                    <a href="#">3 days ago</a>
+                    <a href="#" onclick="filterContent('0', 'bookings')">Today</a>
+                    <a href="#" onclick="filterContent('1', 'bookings')">Yesterday</a>
+                    <a href="#" onclick="filterContent('2', 'bookings')">2 days ago</a>
+                    <a href="#" onclick="filterContent('3', 'bookings')">3 days ago</a>
                 </div>
-                      <h2><?php echo $clientsCount; ?> </h2>
-                        <h3>Gross Revenue</h3>
-                      </div>
-
-                    </div>
-                </div>
-                <div class="card total2">
-                    <div class="info">
-                        <div class="info-detail">
-                        <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
-                <div class="options">
-                    <a href="#">Yesterday</a>
-                    <a href="#">2 days ago</a>
-                    <a href="#">3 days ago</a>
-                </div>
-                        <h2><?php echo $vendorsCount; ?> </h2>
-                          <h3>Net Revenue</h3>
-                        </div>
-
-                      </div>
-                </div>
-                <div class="card total3">
-                    <div class="info">
-                        <div class="info-detail">
-                        <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
-                <div class="options">
-                    <a href="#">Yesterday</a>
-                    <a href="#">2 days ago</a>
-                    <a href="#">3 days ago</a>
-                </div>
-                        <h2><?php echo $bookingsCount; ?> </h2>
-                          <h3>Paid Subsciptions</h3>
-                        </div>
-
-                      </div>
-                </div>
-                <div class="card total4">
-                    <div class="info">
-                      <div class="info-detail">
-                      <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
-                <div class="options">
-                    <a href="#">Yesterday</a>
-                    <a href="#">2 days ago</a>
-                    <a href="#">3 days ago</a>
-                </div>
-                      <h2><?php echo $clientsCount; ?> </h2>
-                        <h3>Pending Subscription Payments</h3>
-                      </div>
-
-                    </div>
-                </div>
-                <div class="card total5">
-                    <div class="info">
-                        <div class="info-detail">
-                        <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
-                <div class="options">
-                    <a href="#">Yesterday</a>
-                    <a href="#">2 days ago</a>
-                    <a href="#">3 days ago</a>
-                </div>
-                        <h2><?php echo $vendorsCount; ?> </h2>
-                          <h3>Overdue Subscription Payments</h3>
-                        </div>
-
-                      </div>
-                </div>
-                <!-- card bottom -->
-
+                <h2><span id="totalBookings"></span></h2>
+                <h3>Total Bookings</h3>
+                <!-- <h4>New clients: <span id="newClients"></span></h4> -->
             </div>
-        <!-- </main> -->
-
-                <div class="dashboard-block">
-                <div class="bookings-summary">
-                    <!-- start of summary section -->
-                    <div class="summaries">
-                    <div class="general-summaries">
-            <div class="finance-summaries">
-            <div id="lineGraphContainerRevenue">
-        <h1>Total Revenue </h1>
-        <div class="chart-container">
-            <div class="button-container">
-                <button id="monthlyButtonRevenue" class="filter-button" onclick="filterLineGraphDataRevenue('monthly')">Monthly</button>
-                <button id="quarterlyButtonRevenue" class="filter-button" onclick="filterLineGraphDataRevenue('quarterly')">Quarterly</button>
-                <button id="yearlyButtonRevenue" class="filter-button" onclick="filterLineGraphDataRevenue('yearly')">Yearly</button>
-            </div>
-            <canvas id="lineChartRevenue" width="400" height="400"></canvas>
         </div>
     </div>
-    </div>
-    </div>
-                        <!-- start of overview -->
-                        <div class="overview">
-                        <div class="card total1">
-                    <div class="info">
-                      <div class="info-detail">
 
-                      <h2><?php echo $clientsCount; ?> </h2>
-                        <h3>Active Subscriptions</h3>
-                        <h4> Total Revenue:  </h4>  
-                    </div>
-
-                    </div>
+    <!-- card for vendors -->
+    <div class="card total2">
+        <div class="info">
+            <div class="info-detail">
+                <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
+                <div class="options">
+                    <a href="#" onclick="filterContent('0', 'payments')">Today</a>
+                    <a href="#" onclick="filterContent('1', 'payments')">Yesterday</a>
+                    <a href="#" onclick="filterContent('2', 'payments')">2 days ago</a>
+                    <a href="#" onclick="filterContent('3', 'payments')">3 days ago</a>
                 </div>
-                <div class="card total2">
-                    <div class="info">
-                        <div class="info-detail">
+                <h2><span id="totalVendors"></span></h2>
+                <h3>Pending Payments</h3>
+                <!-- <h4>New vendors: <span id="newVendors"></span></h4> -->
+            </div>
+        </div>
+    </div>
 
-                        <h2><?php echo $vendorsCount; ?> </h2>
-                          <h3>New Subscriptions</h3>
-                          <h4> Total Revenue:  </h4> 
-                        </div>
-
-                      </div>
-                </div>                     
-                        </div>
-                    </div>
-                    <!-- end of booking details summaries -->
-
-                 </div>
-
+    <!-- card for bookings -->
+    <div class="card total3">
+        <div class="info">
+            <div class="info-detail">
+                <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
+                <div class="options">
+                    <a href="#" onclick="filterContent('0', 'revenue')">Today</a>
+                    <a href="#" onclick="filterContent('1', 'revenue')">Yesterday</a>
+                    <a href="#" onclick="filterContent('2', 'revenue')">2 days ago</a>
+                    <a href="#" onclick="filterContent('3', 'revenue')">3 days ago</a>
+                </div>
+                <h2><span id=""></span></h2>
+                <h3>Total Revenue</h3>
+                <!-- <h4>New bookings: <span id="newBookings"></span></h4> -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- card bottom -->
+<!-- main -->
+                <div class="dashboard-block">
                 <div class="card detail">
                                  <table>
                          <thead>
-                         <h2>Revenue Breakdown by Vendor</h2> 
+                         <h2>Bookings</h2> 
                         <tr>                      
-                            <th>Vendor Name</th>
-                            <th>Monthly Fee</th>
-                            <th>Total Payments Received</th>
-                            <th>Pending Payments</th>
-                            <th>Cumulative Revenue</th>
-                            <th>Action</th>
+                            <th>Client Name</th>
+                            <th>Service</th>
+                            <th>Booking Date</th>
+                            <th>Event Date</th>
+                            <th>Status</th>
+                          
                         </tr>
                     </thead>
                     <tbody>
         <?php foreach ($rows as $row): ?>
             <tr>                         
-                <td><?php echo $row['vendor_name']; ?></td>
                 <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
+                <td><?php echo $row['service_name']; ?></td>
                 <td><?php echo $row['booking_date']; ?></td>
                 <td><?php echo $row['event_date']; ?></td>
-                <td><?php echo $row['service_name']; ?></td>
-                <td>
-                <i class="material-symbols-outlined">visibility</i>
-        <span class="material-symbols-outlined">edit</span>
-                    <span class="material-symbols-outlined">delete</span>
-                </td>
+                <td><?php echo $row['status']; ?></td>
+            
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
-</div>            
+</div>
+      
 
             </div>
         </div>
@@ -641,8 +575,9 @@ try {
 </script>
    <!--scripts-->
    <!--apexCharts-->
-   <script src="script2.js"></script>
+   <script src="chart.js"></script>
+   <script src="vendorFilter.js"></script>
    <script src="script3.js"></script>
-   <script src="charts.js"></script>
+   <!-- <script src="charts.js"></script> -->
  </body>
 </html>

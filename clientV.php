@@ -1,26 +1,39 @@
 <?php
 include 'connection.php'; // Ensure connection to the database
- 
+include 'login.php';
+
+// session_start(); // Start session to access session variables
+
 $rows = [];
 try {
-    // SQL query to select data from the tables
-    $sql = "SELECT bookings.booking_id, clients.first_name, clients.last_name, vendors.vendor_name, services.service_name, bookings.booking_date, bookings.status, bookings.payment_status, bookings.event_date
-            FROM bookings
-            JOIN clients ON bookings.client_id = clients.client_id
-            JOIN services ON bookings.service_id = services.service_id
-            JOIN vendors ON bookings.vendor_id = vendors.vendor_id";
+    // Check if the user is logged in and get their user_id
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
 
-    // Execute query
-    $stmt = $pdo->query($sql);
+        // SQL query to select data from the tables filtered by the logged-in user
+                $sql = "SELECT id, client_name, client_email, feedback, rating
+                FROM client_feedback
+                Join vendors ON client_feedback.vendor_id= vendors.vendor_id
+                WHERE vendors.user_id = :user_id";
 
-    // Fetch all rows as associative array
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Prepare and execute query
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Fetch all rows as associative array
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        // Handle case where user is not logged in
+        echo "You must be logged in to view this page.";
+    }
 
 } catch (PDOException $e) {
     // Handle errors gracefully
     echo "Error: " . $e->getMessage();
 }
 ?>
+
 <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -211,19 +224,19 @@ try {
             <div class="sidebar">
                 <div class="user-image">
                     <img class="profile-image" src="Images/pp1.jpeg" alt="">
-                    <p class="role"> Manager    </p>
+                    <p class="role"> Vendor   </p>
                     </div>
                 <div class="sidebar-menu ">
-                    <span   class="bx bx-sidebar dash"></span><p class="dash"><a href="managerDash.php"> Dashboard</a></p>
+                    <span   class="bx bx-sidebar dash"></span><p class="dash"><a href="vendorD.php"> Dashboard</a></p>
                 </div>
                 <div class="sidebar-menu">
-                    <span class="bx bx-bookmark-heart"></span><p><a href="bookingsM.php">Bookings</a></p>
+                    <span class="bx bx-bookmark-heart"></span><p><a href="BookingList.php">Bookings</a></p>
                 </div>
                 <div class="sidebar-menu">
-                    <span class="bx bx-user"></span><p> <a href="vendorsM.php"> Vendors</a></p>
+                    <span class="bx bx-user"></span><p> <a href="servicesV.php"> Services</a></p>
                 </div>
                 <div class="sidebar-menu">
-                    <span class="bx bx-user"></span><p> <a href="ClientM.php"> Clients</a></p>
+                    <span class="bx bx-user"></span><p> <a href="ClientV.php"> Clients</a></p>
                 </div>
                 <div class="sidebar-menu">
                     <span class="bx bx-wallet-alt"></span><p><a href="finance.php">Finance</a></p>
@@ -238,7 +251,7 @@ try {
             <div class="dashboard-container">
                
                 <div class="card detail">
-                    <h2>All Bookings</h2>
+                    <h2>Client Feedback</h2>
                      <div class="detail-header">
                                            
                         <div class="filterEntries">
@@ -250,11 +263,7 @@ try {
                                     <option value="100">100</option>
                                 </select> entries
                             </div> -->
-                            <div class="button-container">
-                        <button id="" class="filter-button" >Confirmed</button>
-                        <button id="" class="filter-button" >Pending</button>
-                        <button id="" class="filter-button" >Cancelled</button>
-                    </div>
+                      
                             <div class="filter">
                                 
                                 <input type="search" name="" id="search" placeholder="Search bookings">
@@ -278,33 +287,23 @@ try {
                      <table>
     <thead>
         <tr>
-            <th>Booking #</th>
             <th>Client</th>
-            <th>Booking Date</th>
-            <th>Event Date</th>
-            <th>Service Booked</th>
-            <th>Vendor</th>
-            <th>Booking status</th>
-            <th>Payment status</th>
-            <th>Action</th>
+            <th>Rating</th>
+            <th>Comment</th>
+            <!-- <th>Action</th> -->
         </tr>
     </thead>
     <tbody>
         <?php foreach ($rows as $row): ?>
-            <tr data-booking-id="<?php echo $row['booking_id']; ?>">
-                <td><?php echo $row['booking_id']; ?></td>
-                <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
-                <td><?php echo $row['booking_date']; ?></td>
-                <td><?php echo $row['event_date']; ?></td>
-                <td><?php echo $row['service_name']; ?></td>
-                <td><?php echo $row['vendor_name']; ?></td>
-                <td><?php echo $row['status']; ?></td>
-                <td><span class="status fullfilled"><?php echo $row['payment_status']; ?></span></td>
-                <td>
+            <tr data-booking-id="<?php echo $row['id']; ?>">
+                <td><?php echo $row['client_name']; ?></td>
+                <td><?php echo $row['rating']; ?></td>
+                <td><?php echo $row['feedback']; ?></td>
+                <!-- <td>
                     <i class="material-symbols-outlined view">visibility</i>
                     <span class="material-symbols-outlined edit">edit</span>
                     <span class="material-symbols-outlined delete">delete</span>
-                </td>
+                </td> -->
             </tr>
         <?php endforeach; ?>
     </tbody>
@@ -421,27 +420,25 @@ try {
         })
         .catch(error => console.error('Error:', error));
     });
-});
-
- //dropdown menu
+}); //dropdown menu
        
- document.querySelector('.dropdown-btn').addEventListener('click', function() {
-        const dropdownMenu = document.querySelector('.dropdown-menu');
-        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropdown-btn')) {
-            const dropdowns = document.getElementsByClassName("dropdown-menu");
-            for (let i = 0; i < dropdowns.length; i++) {
-                const openDropdown = dropdowns[i];
-                if (openDropdown.style.display === 'block') {
-                    openDropdown.style.display = 'none';
-                }
-            }
-        }
-    }
+       document.querySelector('.dropdown-btn').addEventListener('click', function() {
+           const dropdownMenu = document.querySelector('.dropdown-menu');
+           dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+       });
+   
+       // Close the dropdown if the user clicks outside of it
+       window.onclick = function(event) {
+           if (!event.target.matches('.dropdown-btn')) {
+               const dropdowns = document.getElementsByClassName("dropdown-menu");
+               for (let i = 0; i < dropdowns.length; i++) {
+                   const openDropdown = dropdowns[i];
+                   if (openDropdown.style.display === 'block') {
+                       openDropdown.style.display = 'none';
+                   }
+               }
+           }
+       }
 
         </script>
     </body>

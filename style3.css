@@ -910,7 +910,7 @@ li{
     border-radius: 5px;
     margin-right: 10px;
     cursor: pointer;
-    margin-top: 25px;
+    margin-top: 10px;
 }
 .bottom-details{
     margin-top: 10px;
@@ -1069,4 +1069,8 @@ li{
 }
 .right-section .bx{
     font-size :20px; 
+}
+ .vendor-services *{
+  
+    font-family:cursive;
 }

@@ -32,38 +32,135 @@ try {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<style>
+    body{
+        background: none;
+    }
+    .service-content1{
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 50px;
+      
+    }
+    .service-content1 .row {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+    .service-content1 .filter{
+        width: 25%;
+        /* background: #caa69e1a; */
+        background: #edb7ad33;
+        /* background: #c9b5b11a; */
+        height: 690px;
+        position: fixed;
+        display: flex;
+        justify-content: center;
+        padding-left: 0;
+    }
+    .services{
+        display: flex;
+        flex-direction: row;
+        width: 75%;
+       position: sticky;
+       left: 75%;
+       margin-top: 100px;
+    }
+    .service-blocks {
+    background: white;
+    height: 430px;
+    border: 1px solid #bdb7b726;
+    width: 100%;
+    margin-left: 0;
+    border-radius: 0;
+    box-shadow: none;
+    }
+    .filter form{
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+    }
+    .filter select{
+        width: 75%;
+        height: 60px;
+        text-align: center;
+    border: none;
+    font-size: medium;
+    font-family: cursive;
+    margin-top: 20px;
+    }
+    .filter label {
+    color: black;
+    margin-left: 5px;
+    font-family: cursive;
+    margin-top: 20px;
+}
+.filter input {
+    padding: 7px 10px;
+    width: 75%;
+    font-family: cursive;
+    transition: 0.3s ease;
+    border: none;
+    background: #fff;
+    border-radius: 0;
+}
+.filterbtn{
+    margin-top: 65px;
+    padding: 10px 20px;
+    background-color: #e3bdb5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+    
+}
+</style>
     </head>
     <body >
-        <div class="background">
-        <header class="header">
-        <nav class="navbar">
-            <a href="client.php">Dashboard</a>
-            <a href="">My Bookings</a>
-            <a href="">Event Planner</a>
-            <!-- <a href="Weddingservices.php">Services</a> -->
-            <a href="Weddingvendors.php">Services</a>
-            <a href="">Payments</a>
-            <a href="">Review and Feedback</a>
-               <div class="right-section">
-                <ul>
-                    <li><a href="#"><i class='bx bx-bell' ></i> </a></li>
-                    <li><a href="#"><i class='bx bx-envelope' ></i> </a></li>
-                    <li><a href="#"><i class='bx bx-user' ></i> </a></li>
-                   
-                </ul>
-            </div>
-            </nav>
-         
-          </header>
+        <div class="background vendor-services">
+        <?php include 'clientHeader.php'; ?>
        
           <div class="container">
             <div class="content">
              
-                <div class="filter-city">
+                <!-- <div class="filter-city">
                     <label for="search">Search:</label>
                     <input type="search" name="" id="search" placeholder="City/ Town">
+                </div> -->
+              
+                <div class="service-content1" id="service-content">
+                      <div class="filter">
+                      <form id="filterForm">
+    <!-- Location Dropdown -->
+    <select id="location" name="location">
+        <option value="">Locations</option>
+        <!-- Options will be dynamically populated via PHP or JavaScript -->
+    </select>
+
+    <!-- Service Type Dropdown -->
+    <select id="service_type" name="service_type">
+        <option value="">Service Types</option>
+        <!-- Options will be dynamically populated via PHP or JavaScript -->
+    </select>
+
+    <!-- Price Range -->
+    <label for="min_price">Price Range:</label>
+    <input type="number" id="min_price" name="min_price" placeholder="Min Price">
+    <input type="number" id="max_price" name="max_price" placeholder="Max Price">
+
+    <!-- Ratings Slider -->
+    <label for="ratings">Ratings:</label>
+    <input type="range" id="ratings" name="ratings" min="0" max="5" step="0.5" value="0">
+    <span id="ratingsValue">0</span>
+
+    <!-- Submit Button -->
+    <button class="filterbtn" type="submit">Apply Filters</button>
+</form>
                 </div>
-                <div class="service-content" id="service-content">
+                <div class="services">
                     <div class="row">
                     <?php $count = 0; ?>
                     <?php foreach ($rows as $row): ?> 
@@ -122,7 +219,8 @@ try {
                 </div>
                 
                 </div>
-                <footer class="footer">
+                </div>
+                <!-- <footer class="footer">
                     <div class="footer-heading">
                         <h3>Start Today</h3>
                     </div>
@@ -136,7 +234,7 @@ try {
                             <ul>
                                 <li><a href="#">Location 1</a></li>
                                 <li><a href="#">Location 2</a></li>
-                                <!-- Add more locations as needed -->
+                              
                             </ul>
                         </div>
                         <div class="footer-column">
@@ -144,7 +242,7 @@ try {
                             <ul>
                                 <li><a href="#">Link 1</a></li>
                                 <li><a href="#">Link 2</a></li>
-                                <!-- Add more quick links as needed -->
+                              
                             </ul>
                         </div>
                         <div class="footer-column">
@@ -152,11 +250,11 @@ try {
                             <ul>
                                 <li>Email: info@example.com</li>
                                 <li>Phone: +1234567890</li>
-                                <!-- Add more contact information as needed -->
+                               
                             </ul>
                         </div>
                     </div>
-                </footer>
+                </footer> -->
         </div>
        
           </div>

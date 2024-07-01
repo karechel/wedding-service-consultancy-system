@@ -4,17 +4,17 @@ include 'connection.php'; // Ensure connection to the database
 $rows = [];
 try {
     // SQL query to select data from the tables
-    $sql = "SELECT bookings.booking_id, clients.first_name, clients.last_name, vendors.vendor_name, services.service_name, bookings.booking_date, bookings.status, bookings.payment_status, bookings.event_date
-            FROM bookings
-            JOIN clients ON bookings.client_id = clients.client_id
-            JOIN services ON bookings.service_id = services.service_id
-            JOIN vendors ON bookings.vendor_id = vendors.vendor_id";
+    $sql = "SELECT client_id, first_name,last_name, contact_number,wedding_date,location
+            FROM clients";
 
     // Execute query
     $stmt = $pdo->query($sql);
 
     // Fetch all rows as associative array
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Debug: Check if $rows is populated
+    // var_dump($rows); // Use this to verify if $rows contains data
 
 } catch (PDOException $e) {
     // Handle errors gracefully
@@ -30,11 +30,13 @@ try {
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=poppins&display=swap">
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <!-- Option 1: Include in HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
         <title>Bookings</title>
-    <style>
-         body{
+        <style>
+            body{
                 background: #ededed;
-                        }
+            }
         .button-container {
             position: absolute;
             display: block;
@@ -69,7 +71,15 @@ try {
     outline: none;
     transition: 0.3s ease;
     position: absolute;
-    left: 73%;
+    left: 72%;
+    top: 18%;
+}
+.detail-header {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
 }
 .addBookingBtn button {
     color: #fff;
@@ -97,13 +107,12 @@ try {
 }
 .material-symbols-outlined {
         font-size: 18px;
-        cursor: pointer;
 }
-    .navbar {
+.navbar {
     padding-left: 70px;
     height: 4rem;
     }
-        .navbar a{
+    .navbar a{
             left: 87%;
             font-size: 1.3rem;
         }
@@ -188,8 +197,8 @@ try {
     </style>
     </head>
     <body>
-      
-       <header class="header">
+       <!--navbar--> 
+       <<header class="header">
             <nav class="navbar">
                 <img src="Images/logo.jpg" width="80" height="60">
                 <a href="#"><i class='bx bx-bell'></i></a>
@@ -213,7 +222,7 @@ try {
                     <img class="profile-image" src="Images/pp1.jpeg" alt="">
                     <p class="role"> Manager    </p>
                     </div>
-                <div class="sidebar-menu ">
+                    <div class="sidebar-menu ">
                     <span   class="bx bx-sidebar dash"></span><p class="dash"><a href="managerDash.php"> Dashboard</a></p>
                 </div>
                 <div class="sidebar-menu">
@@ -232,98 +241,71 @@ try {
                     <span  class='bx bx-objects-horizontal-left' ></span><p>Reports</p>
                 </div>
                
+               
             </div>
             <!--Maindashboard--> 
             <main>
             <div class="dashboard-container">
                
                 <div class="card detail">
-                    <h2>All Bookings</h2>
                      <div class="detail-header">
-                                           
-                        <div class="filterEntries">
-                            <!-- <div class="entries">
-                                Show <select name="" id="table_size">
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select> entries
-                            </div> -->
-                            <div class="button-container">
-                        <button id="" class="filter-button" >Confirmed</button>
-                        <button id="" class="filter-button" >Pending</button>
-                        <button id="" class="filter-button" >Cancelled</button>
-                    </div>
-                            <div class="filter">
+                        <h2>All Clients</h2>
+                        <div class="filter">
                                 
-                                <input type="search" name="" id="search" placeholder="Search bookings">
+                                <input type="search" name="" id="search" placeholder="Search Vendors">
                             </div>
-                        </div>
-                        <div class="addBookingBtn">
-                            <button><span class="material-symbols-outlined">add</span>Add</button>
-                        </div> 
-                        <!-- <select id="filterDropdown">
-                            <option value="all">All</option>
-                            <option value="category2">Booked</option>
-                            <option value="category1">Pending</option>
-                            <option value="category2">Cancelled</option>
-                            <option value="category1">Paid</option>
-                            <option value="category2">Due</option>
-                            
-                        </select> -->
-                   
+                            <div class="addBookingBtn">
+                            <button><i class='bx bx-plus'></i>Add</button>
+                        </div>  
                      </div>
-                     <!-- end of header section -->
                      <table>
-    <thead>
-        <tr>
-            <th>Booking #</th>
-            <th>Client</th>
-            <th>Booking Date</th>
-            <th>Event Date</th>
-            <th>Service Booked</th>
-            <th>Vendor</th>
-            <th>Booking status</th>
-            <th>Payment status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($rows as $row): ?>
-            <tr data-booking-id="<?php echo $row['booking_id']; ?>">
-                <td><?php echo $row['booking_id']; ?></td>
-                <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
-                <td><?php echo $row['booking_date']; ?></td>
-                <td><?php echo $row['event_date']; ?></td>
-                <td><?php echo $row['service_name']; ?></td>
-                <td><?php echo $row['vendor_name']; ?></td>
-                <td><?php echo $row['status']; ?></td>
-                <td><span class="status fullfilled"><?php echo $row['payment_status']; ?></span></td>
-                <td>
-                    <i class="material-symbols-outlined view">visibility</i>
-                    <span class="material-symbols-outlined edit">edit</span>
-                    <span class="material-symbols-outlined delete">delete</span>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
-<!-- Edit Popup Modal -->
-<div id="editModal" class="modal">
+                    <thead>
+                        <tr>
+                            <th>Client #</th>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Location</th>
+                            <th>Event Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($rows as $row): ?>
+                        <tr>
+                            <td><?php echo $row['client_id']; ?></td>
+                            <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
+                            <td><?php echo $row['contact_number']; ?></td>
+                            <td><?php echo $row['location']; ?></td>
+                            <td><?php echo $row['wedding_date']; ?></td>
+                            <td>
+                            <span class="material-symbols-outlined edit">edit</span>
+                                <span class="material-symbols-outlined delete">delete</span>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <div id="editModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2>Edit Booking</h2>
-        <form id="editForm">
-            <input type="hidden" id="editBookingId" name="booking_id">
-            <label for="editStatus">Booking Status:</label>
-            <input type="text" id="editStatus" name="status" required>
-            <label for="editPaymentStatus">Payment Status:</label>
-            <input type="text" id="editPaymentStatus" name="payment_status" required>
+        <h2>Edit Client</h2>
+        <form id="editForm" method="POST" action="">
+            <input type="hidden" id="editClientId" name="client_id">
+            <label for="editFirstName">First Name:</label>
+            <input type="text" id="editFirstName" name="first_name" required>
+            <label for="editLastName">Last Name:</label>
+            <input type="text" id="editLastName" name="last_name" required>
+            <label for="editContactNumber">Contact Number:</label>
+            <input type="text" id="editContactNumber" name="contact_number" required>
+            <label for="editWeddingDate">Wedding Date:</label>
+            <input type="text" id="editWeddingDate" name="wedding_date" required>
+            <label for="editLocation">Location:</label>
+            <input type="text" id="editLocation" name="location" required>
             <button type="submit">Save Changes</button>
         </form>
     </div>
 </div>
+
                      <footer>
                         <span>showing 1 of 10 of 50 entries</span>
                         <div class="pagination">
@@ -347,22 +329,17 @@ try {
 
     document.querySelectorAll('.delete').forEach(button => {
         button.addEventListener('click', function () {
-            const bookingId = this.closest('tr').dataset.bookingId;
+            const clientId = this.closest('tr').querySelector('td:first-child').innerText;
 
-            if (confirm('Are you sure you want to delete this booking?')) {
-                fetch('delete_booking.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ booking_id: bookingId })
+            if (confirm('Are you sure you want to delete this client?')) {
+                fetch('delete_client.php?delete_id=' + clientId, {
+                    method: 'GET'
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        this.closest('tr').remove(); // Remove the deleted row from the DOM
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url; // Redirect to update the page after deletion
                     } else {
-                        alert('Error deleting booking: ' + data.message);
+                        alert('Error deleting client');
                     }
                 })
                 .catch(error => console.error('Error:', error));
@@ -372,14 +349,21 @@ try {
 
     document.querySelectorAll('.edit').forEach(button => {
         button.addEventListener('click', function () {
-            const bookingId = this.closest('tr').dataset.bookingId;
-            const status = this.closest('tr').querySelector('td:nth-child(7)').innerText;
-            const paymentStatus = this.closest('tr').querySelector('td:nth-child(8) .status').innerText;
-
-            document.getElementById('editBookingId').value = bookingId;
-            document.getElementById('editStatus').value = status;
-            document.getElementById('editPaymentStatus').value = paymentStatus;
-
+            const row = this.closest('tr');
+            const clientId = row.querySelector('td:first-child').innerText;
+            const firstName = row.querySelector('td:nth-child(2)').innerText;
+            const lastName = row.querySelector('td:nth-child(3)').innerText;
+            const contactNumber = row.querySelector('td:nth-child(4)').innerText;
+            const location = row.querySelector('td:nth-child(5)').innerText;
+            const weddingDate = row.querySelector('td:nth-child(6)').innerText;
+          
+            document.getElementById('editClientId').value = clientId;
+            document.getElementById('editFirstName').value = firstName;
+            document.getElementById('editLastName').value = lastName;
+            document.getElementById('editContactNumber').value = contactNumber;
+            document.getElementById('editLocation').value = location;
+            document.getElementById('editWeddingDate').value = weddingDate;
+          
             modal.style.display = "block";
         });
     });
@@ -399,24 +383,15 @@ try {
 
         const formData = new FormData(this);
 
-        fetch('update_booking.php', {
+        fetch('update_client.php', {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                const bookingId = formData.get('booking_id');
-                const status = formData.get('status');
-                const paymentStatus = formData.get('payment_status');
-
-                const row = document.querySelector(`tr[data-booking-id='${bookingId}']`);
-                row.querySelector('td:nth-child(7)').innerText = status;
-                row.querySelector('td:nth-child(8) .status').innerText = paymentStatus;
-
-                modal.style.display = "none";
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to update the page after edit
             } else {
-                alert('Error updating booking: ' + data.message);
+                alert('Error updating client');
             }
         })
         .catch(error => console.error('Error:', error));
@@ -446,5 +421,3 @@ try {
         </script>
     </body>
 </html>
-
-

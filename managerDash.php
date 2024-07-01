@@ -1,5 +1,6 @@
 <?php
 include 'connection.php';
+include 'login.php';
 $pdo = new PDO($dsn, $user, $password);
 
 $statement1 = $pdo->query('SELECT COUNT(*) FROM clients');
@@ -11,23 +12,42 @@ $vendorsCount = $statement2->fetchColumn();
 $statement3 = $pdo->query('SELECT COUNT(*) FROM bookings');
 $bookingsCount = $statement3->fetchColumn();
 $rows = [];
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+if (!isset($_SESSION['username'])) {
+    // If not logged in, redirect to the login page
+    header("Location: index.html");
+    exit();
+}
+
+$rows = [];
 try {
+    // Check if the user is logged in and get their user_id
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
     // SQL query to select data from the tables
-    $sql = "SELECT bookings.booking_id, clients.first_name, clients.last_name, vendors.vendor_name, services.service_name, bookings.booking_date, bookings.status, bookings.payment_status, bookings.event_date
+    $sql = "SELECT bookings.booking_id, clients.first_name, clients.last_name, vendors.vendor_name, services.service_name, bookings.booking_date, bookings.status, bookings.payment_status, bookings.event_date,users.username
             FROM bookings
             JOIN clients ON bookings.client_id = clients.client_id
             JOIN services ON bookings.service_id = services.service_id
-            JOIN vendors ON bookings.vendor_id = vendors.vendor_id";
+            JOIN vendors ON bookings.vendor_id = vendors.vendor_id
+            JOIN users ON vendors.user_id=users.user_id";
 
     // Execute query
     $stmt = $pdo->query($sql);
 
     // Fetch all rows as associative array
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    // Handle case where user is not logged in
+    echo "You must be logged in to view this page.";
+}
 
 } catch (PDOException $e) {
-    // Handle errors gracefully
-    echo "Error: " . $e->getMessage();
+// Handle errors gracefully
+echo "Error: " . $e->getMessage();
 }
 ?>
 <!DOCTYPE html>
@@ -57,7 +77,12 @@ try {
 .info-detail h2 {
     font-size: 4rem;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-
+    justify-content: center;
+    display: flex;
+}
+.info-detail h2 span{
+    font-size: 4rem;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 .info-detail h3 {
     font-size: 1rem;
@@ -74,12 +99,16 @@ try {
     margin-top: 20px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
+.info-detail h4 span{
+    margin-left:1px;
+    font-size: larger;
+}
 .container-content {
     padding-bottom: 100px;
     padding-left: 50px;
     position: relative;
     display: flex;
-    margin-top: 130px;
+    margin-top: 100px;
 
 }
 .navbar {
@@ -390,7 +419,7 @@ try {
         <a href="#"><i class='bx bx-user-circle'></i> Profile</a>
         <a href="#"><i class='bx bx-cog bx-flip-horizontal' ></i> Settings</a>
         <div class="divider"></div>
-        <a href="#"><i class='bx bx-exit bx-flip-horizontal' ></i> Sign Out</a>
+        <a href="logout.php"><i class='bx bx-exit bx-flip-horizontal'></i> Sign Out</a>
     </div>
 </div>
             </nav>
@@ -403,15 +432,18 @@ try {
             <div class="user-image">
             <img src="Images/pp.jpeg" alt="">
             <h3>
-                Jane Doe<br>
+            <?php foreach ($rows as $row): ?>
+            
+            <?php endforeach; ?>
                 <span>Manager</span>
             </h3>
             </div>
             <div class="dashboard-menu">
                 <ul>
-               <li><div class="dash-icon"><i class='bx bxs-dashboard'></i></div><a class="active" href="adminDash.php">Dashboard</a></li>
+               <li><div class="dash-icon"><i class='bx bxs-dashboard'></i></div><a class="active" href="managerDash.php">Dashboard</a></li>
                 <li> <div class="dash-icon"><i class='bx bxs-bookmark-heart'></i></div><a href="bookingsM.php">Bookings</a></li>
                 <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="vendorsM.php">Vendors</a></li>
+                <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="clientM.php">Clients</a></li>
                 <li><div class="dash-icon"><i class='bx bx-wallet-alt' ></i></div><a href="finance.php">Finance</a></li>
                 <li><div class="dash-icon"><i class='bx bxs-report' ></i></div><a href="#">Reports</a></li>
             </ul>
@@ -421,62 +453,63 @@ try {
         </div>
 
         <div class="main-content">
-
-            <div class="dashboard-container">
-                <!-- cards -->
-                <div class="card total1">
-                    <div class="info">
-                      <div class="info-detail">
-                      <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
+        <div class="dashboard-container">
+    <!-- card for clients -->
+    <div class="card total1">
+        <div class="info">
+            <div class="info-detail">
+                <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
                 <div class="options">
-                    <a href="#">Yesterday</a>
-                    <a href="#">2 days ago</a>
-                    <a href="#">3 days ago</a>
+                    <a href="#" onclick="filterContent('0', 'clients')">Today</a>
+                    <a href="#" onclick="filterContent('1', 'clients')">Yesterday</a>
+                    <a href="#" onclick="filterContent('2', 'clients')">2 days ago</a>
+                    <a href="#" onclick="filterContent('3', 'clients')">3 days ago</a>
                 </div>
-                      <h2><?php echo $clientsCount; ?> </h2>
-                        <h3>Clients</h3>
-                       <h4> New clients:    </h4>
-                      </div>
-
-                    </div>
-                </div>
-                <div class="card total2">
-                    <div class="info">
-                        <div class="info-detail">
-                        <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
-                <div class="options">
-                    <a href="#">Yesterday</a>
-                    <a href="#">2 days ago</a>
-                    <a href="#">3 days ago</a>
-                </div>
-                        <h2><?php echo $vendorsCount; ?> </h2>
-                          <h3>vendors</h3>
-                          <h4> New vendors:    </h4>
-                        </div>
-
-                      </div>
-                </div>
-                <div class="card total3">
-                    <div class="info">
-                        <div class="info-detail">
-                        <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
-                <div class="options">
-                    <a href="#">Yesterday</a>
-                    <a href="#">2 days ago</a>
-                    <a href="#">3 days ago</a>
-                </div>
-                        <h2><?php echo $bookingsCount; ?> </h2>
-                          <h3>Bookings</h3>
-                          <h4> New bookings:    </h4>
-                        </div>
-
-                      </div>
-                </div>
-                <!-- card bottom -->
-
+                <h2><span id="totalClients"></span></h2>
+                <h3>Clients</h3>
+                <h4>New clients: <span id="newClients"></span></h4>
             </div>
-        <!-- </main> -->
+        </div>
+    </div>
 
+    <!-- card for vendors -->
+    <div class="card total2">
+        <div class="info">
+            <div class="info-detail">
+                <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
+                <div class="options">
+                    <a href="#" onclick="filterContent('0', 'vendors')">Today</a>
+                    <a href="#" onclick="filterContent('1', 'vendors')">Yesterday</a>
+                    <a href="#" onclick="filterContent('2', 'vendors')">2 days ago</a>
+                    <a href="#" onclick="filterContent('3', 'vendors')">3 days ago</a>
+                </div>
+                <h2><span id="totalVendors"></span></h2>
+                <h3>Vendors</h3>
+                <h4>New vendors: <span id="newVendors"></span></h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- card for bookings -->
+    <div class="card total3">
+        <div class="info">
+            <div class="info-detail">
+                <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
+                <div class="options">
+                    <a href="#" onclick="filterContent('0', 'bookings')">Today</a>
+                    <a href="#" onclick="filterContent('1', 'bookings')">Yesterday</a>
+                    <a href="#" onclick="filterContent('2', 'bookings')">2 days ago</a>
+                    <a href="#" onclick="filterContent('3', 'bookings')">3 days ago</a>
+                </div>
+                <h2><span id="totalBookings"></span></h2>
+                <h3>Bookings</h3>
+                <h4>New bookings: <span id="newBookings"></span></h4>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- card bottom -->
+<!-- main -->
                 <div class="dashboard-block">
 
                  <div class="bookings-summary">
@@ -484,17 +517,15 @@ try {
                     <!-- start of summary section -->
                     <div class="summaries">
                     <div class="button-container">
-                        <button id="thisWeekButton" class="filter-button" onclick="filterData('thisWeek')">This Week</button>
-            <button id="lastWeekButton" class="filter-button" onclick="filterData('lastWeek')">Last Week</button>
-        </div>
+      <button id="thisWeekButton" class="filter-button" onclick="filterData('thisWeek')">This Week</button>
+      <button id="lastWeekButton" class="filter-button" onclick="filterData('lastWeek')">Last Week</button>
+  </div>
                         <div class="chart">
                         <p>Booking Status </p>
                         <canvas id="pieChart" width="200" height="200"></canvas>
+                     <div id="legend" class="legend"></div>
 
 
-    <div id="legend" class="legend"></div>
-
-    <script src="script1.js"></script>
                         </div>
                         <!-- start of overview -->
                         <div class="overview">
@@ -502,7 +533,7 @@ try {
                     <div class="info">
                       <div class="info-detail">
 
-                      <h2><?php echo $clientsCount; ?> </h2>
+                      <h2 id="totalNewBookings"> </h2>
                         <h3>New Bookings</h3>
                       </div>
 
@@ -512,7 +543,7 @@ try {
                     <div class="info">
                         <div class="info-detail">
 
-                        <h2><?php echo $vendorsCount; ?> </h2>
+                        <h2 id="totalCompletedBookings"> </h2>
                           <h3>Completed Bookings</h3>
                         </div>
 
@@ -552,38 +583,7 @@ try {
     </div>
       
         </div>
-<!-- end of finance summaries -->
-<!-- <div class="reviews">
-    <div class="feedback">
-        <h2>Customer Feedback</h2>
-        <span>4.44</span>
-        <p>Based on 24 ratings</p>
-    </div>
-    <div class="ranking">
-    <div class="overview">
-                        <div class="card total1">
-                    <div class="info">
-                      <div class="info-detail">
 
-                      <h2><?php echo $clientsCount; ?> </h2>
-                        <h3>Service Mostly Booked</h3>
-                      </div>
-
-                    </div>
-                </div>
-                <div class="card total2">
-                    <div class="info">
-                        <div class="info-detail">
-
-                        <h2><?php echo $vendorsCount; ?> </h2>
-                          <h3>Service Highest Revenue Generated</h3>
-                        </div>
-
-                      </div>
-                </div>
-                        </div>
-    </div>
-</div> -->
 <div class="overview">
         <div class="card total1">
                     <div class="info">
@@ -634,8 +634,9 @@ try {
 </script>
    <!--scripts-->
    <!--apexCharts-->
+   <script src="chart.js"></script>
    <script src="script2.js"></script>
    <script src="script3.js"></script>
-   <script src="charts.js"></script>
+   <!-- <script src="charts.js"></script> -->
  </body>
 </html>

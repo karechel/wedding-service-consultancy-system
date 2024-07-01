@@ -15,22 +15,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user && $user['password'] === $password) {
         // Authentication successful
         $_SESSION['username'] = $username;
-        $_SESSION['user_id']=$user['user_id'];
-        $_SESSION['client_id']=$user['client_id'];
+        $_SESSION['user_id'] = $user['user_id'];
+        $_SESSION['client_id'] = $user['client_id'];
+
+        // Prevent caching
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
 
         // Redirect based on user type
         switch ($user['role']) {
             case 'Client':
-                header("Location: client.html");
+                header("Location: client.php");
                 break;
             case 'Manager':
-                header("Location: adminDash.php");
+                header("Location: managerDash.php");
                 break;
             case 'Vendor':
-                header("Location: vendorDash.php");
+                header("Location: vendorD.php");
                 break;
             default:
-                
                 header("Location: welcome.php");
         }
 

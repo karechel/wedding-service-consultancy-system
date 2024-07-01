@@ -203,20 +203,55 @@ function validateSetupVendorForm() {
     } 
     return true; // Form is valid
 }
-
+//favourites
+// function toggleHeart(element) {
+//     if (element.classList.contains('bx-heart')) {
+//       // If it's the regular heart, change to solid red heart
+//       element.classList.remove('bx-heart');
+//       element.classList.add('bxs-heart');
+//       element.style.color = '#ff0000';
+//     } else {
+//       // If it's the solid red heart, change back to regular heart
+//       element.classList.remove('bxs-heart');
+//       element.classList.add('bx-heart');
+//       element.style.color = ''; // Remove the color style
+//     }
+//   }
 function toggleHeart(element) {
+    const serviceBlock = element.closest('.service-block');
+    const vendorId = serviceBlock.getAttribute('data-vendor-id');
+    const serviceId = serviceBlock.getAttribute('data-service-id');
+    const clientId = document.body.getAttribute('data-client-id'); // Assuming client ID is stored in the body tag
+
     if (element.classList.contains('bx-heart')) {
-      // If it's the regular heart, change to solid red heart
-      element.classList.remove('bx-heart');
-      element.classList.add('bxs-heart');
-      element.style.color = '#ff0000';
+        element.classList.remove('bx-heart');
+        element.classList.add('bxs-heart');
+        element.style.color = '#ff0000';
+
+        sendFavouriteRequest(clientId, vendorId, serviceId, 'add');
     } else {
-      // If it's the solid red heart, change back to regular heart
-      element.classList.remove('bxs-heart');
-      element.classList.add('bx-heart');
-      element.style.color = ''; // Remove the color style
+        element.classList.remove('bxs-heart');
+        element.classList.add('bx-heart');
+        element.style.color = '';
+
+        sendFavouriteRequest(clientId, vendorId, serviceId, 'remove');
     }
-  }
+}
+
+function sendFavouriteRequest(clientId, vendorId, serviceId, action) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "favourites.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            console.log(xhr.responseText);
+        }
+    };
+    xhr.send("client_id=" + clientId + "&vendor_id=" + vendorId + "&service_id=" + serviceId + "&action=" + action);
+}
+
+//.....other
+
   document.getElementById('weddingServicesLink').addEventListener('click', function(event) {
     event.preventDefault(); // Prevent the default link behavior
 
