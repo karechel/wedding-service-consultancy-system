@@ -62,7 +62,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bindParam(':location', $location);
             $stmt->execute();
             
-            echo "Client record inserted successfully with user_id: $user_id";
+            $isDataProcessedSuccessfully = true;
+
+            if ($isDataProcessedSuccessfully) {
+                // Redirect to index.html
+                header("Location: index.html");
+                exit();
+            } 
+            else{
+                header("Location: index.html?register=true");
+                exit();
+            }
         }
         elseif(isset($_POST['vendor-account'])) {
             // Client account form submission
@@ -84,10 +94,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bindParam(':location', $location);
             $stmt->bindParam(':description', $description);
             $stmt->execute();
-            var_dump($_POST);
+            $isDataProcessedSuccessfully = true;
 
-            
-            echo "Vendor record inserted successfully with user_id: $user_id";
+            if ($isDataProcessedSuccessfully) {
+                // Redirect to index.html
+                header("Location: index.html");
+                exit();
+            } 
+            else{
+                header("Location: index.html?register=true");
+                exit();
+            }
         }elseif (isset($_POST['manager-account'])) {
             // User registration form submission
             $username = $_POST['Username'];

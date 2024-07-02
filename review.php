@@ -73,7 +73,7 @@ try {
     </head>
     <body>
         <div class="background">
-     <?php include 'clientHeader.php'; ?>
+        <?php include 'resuableComponents\clientHeader.php'; ?>
        
           <div class="container">
             <div class="content">

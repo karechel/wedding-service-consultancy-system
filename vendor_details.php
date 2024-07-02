@@ -8,7 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
-    <?php include 'clientHeader.php' ?>
+    <?php include 'resuableComponents\clientHeader.php' ?>
     <?php
     include 'connection.php'; // Ensure connection to the database
     if(isset($_GET['vendor_id'])) {
@@ -76,35 +76,7 @@
         <div class="service_heading"><p>About the Service<p></div>
         <div class="details des"><?php echo $vendorDetails['other_service_details']; ?></div>
     </div>
-    <footer class="footer">
-      
-        <div class="footer-columns">
-            <div class="footer-column">
-                <h4>Locations</h4>
-                <ul>
-                    <li><a href="#">Location 1</a></li>
-                    <li><a href="#">Location 2</a></li>
-                    <!-- Add more locations as needed -->
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="#">Link 1</a></li>
-                    <li><a href="#">Link 2</a></li>
-                    <!-- Add more quick links as needed -->
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Contacts</h4>
-                <ul>
-                    <li>Email: info@example.com</li>
-                    <li>Phone: +1234567890</li>
-                    <!-- Add more contact information as needed -->
-                </ul>
-            </div>
-        </div>
-    </footer>
+    <?php include 'resuableComponents\footer.php' ?>
     <!-- <script>
         function bookNow() {
             // Redirect to the service booking page

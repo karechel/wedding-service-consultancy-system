@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="contact.css">
     </head>
     <body>
-    <?php include 'homeheader.php'; ?>
+    <?php include 'resuableComponents\homeheader.php'; ?>
         <p>Contact Us </p>
       <h1>Let's Work Together!</h1>
       <span>Complete the form and we will get to you within 1 - 2 business days. You can also email us directly at weddinghub@gmail.com </span>

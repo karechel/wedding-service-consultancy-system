@@ -20,10 +20,10 @@
                 <!-- <a href="#">About</a>
                 <a href="#">Services</a> -->
               
-               
+                <div class="right-section">
                     <a href="index.html">Sign In</a>
                     <a href="index.html?register=true" >Sign Up</a>
-              
+                </div>
                 <a class="contact" href="contact.php">Contact</a>
             </nav>
          

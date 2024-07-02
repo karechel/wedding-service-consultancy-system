@@ -135,7 +135,7 @@ try {
     <body>
       
       
-          <?php include 'clientHeader.php'; ?>
+          <?php include 'resuableComponents\clientHeader.php'; ?>
           <div class="container">
             <div class="content">
                 <div class="welcome-container">
@@ -234,7 +234,7 @@ try {
             </div>
         </div>
         <div class="recommendations-content">
-        <h1>Recommendations for Your</h1>
+        <h1>Recommendations for You</h1>
         <div class="recommendations-section">
          
         <div class="service-recommendations-container">
@@ -333,35 +333,7 @@ try {
         </div>
     </div>
     </div>
-    <footer class="footer">
-      
-        <div class="footer-columns">
-            <div class="footer-column">
-                <h4>Locations</h4>
-                <ul>
-                    <li><a href="#">Nakuru</a></li>
-                    <li><a href="#">Mombasa</a></li>
-                    
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="#">Link 1</a></li>
-                    <li><a href="#">Link 2</a></li>
-                 
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Contacts</h4>
-                <ul>
-                    <li>Email: WeddingHub@gmail.com</li>
-                    <li>Phone: +1234567890</li>
-                 
-                </ul>
-            </div>
-        </div>
-    </footer>
+    <?php include 'resuableComponents\footer.php'; ?>
     
         </div>
        

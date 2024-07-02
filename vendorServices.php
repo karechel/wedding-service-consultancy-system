@@ -9,10 +9,10 @@ try {
             FROM services
             JOIN vendor_services ON services.service_id = vendor_services.service_id
             JOIN vendors ON vendor_services.vendor_id = vendors.vendor_id";
-    
+
     // Execute query
     $stmt = $pdo->query($sql);
-    
+
     // Fetch all rows as associative array
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -40,7 +40,7 @@ try {
         display: flex;
         flex-direction: row;
         margin-bottom: 50px;
-      
+
     }
     .service-content1 .row {
     display: flex;
@@ -50,8 +50,9 @@ try {
     .service-content1 .filter{
         width: 25%;
         /* background: #caa69e1a; */
-        background: #edb7ad33;
+        /* background: #edb7ad33; */
         /* background: #c9b5b11a; */
+        background: #d3d4d3;
         height: 690px;
         position: fixed;
         display: flex;
@@ -109,28 +110,29 @@ try {
 .filterbtn{
     margin-top: 65px;
     padding: 10px 20px;
-    background-color: #e3bdb5;
+    width: 150px;
+    background-color: #242923;
     color: #fff;
     border: none;
     border-radius: 5px;
     margin-right: 10px;
     cursor: pointer;
-    
+
 }
 </style>
     </head>
     <body >
         <div class="background vendor-services">
-        <?php include 'clientHeader.php'; ?>
-       
+        <?php include 'resuableComponents\clientHeader.php'; ?>
+
           <div class="container">
             <div class="content">
-             
+
                 <!-- <div class="filter-city">
                     <label for="search">Search:</label>
                     <input type="search" name="" id="search" placeholder="City/ Town">
                 </div> -->
-              
+
                 <div class="service-content1" id="service-content">
                       <div class="filter">
                       <form id="filterForm">
@@ -163,7 +165,7 @@ try {
                 <div class="services">
                     <div class="row">
                     <?php $count = 0; ?>
-                    <?php foreach ($rows as $row): ?> 
+                    <?php foreach ($rows as $row): ?>
                         <?php if ($count % 3 == 0 && $count != 0): ?>
                 </div><div class="row">
             <?php endif; ?>
@@ -174,11 +176,11 @@ try {
                         // Encode the image data as a base64 string
                         $imageData = base64_encode(stream_get_contents($row['image']));
                         echo '<img src="data:image/jpeg;base64,' . $imageData . '" alt="Uploaded Image" class="uploaded-image"> ';
-                        
+
                     } else {
                         echo "Image not found or empty.";
                     }
-                     ?>  
+                     ?>
                             <!-- <a href=""><img src="Images/venue.jpg" alt=""></a> -->
                                <div class="vendor">
                                 <div class="author-image">
@@ -193,14 +195,14 @@ try {
                     <div class="details">
                         <div class="top-details">
                             <h3 class="category-title"><?php echo $row['service_name']; ?></h3>
-                           
+
                             <ul class="rating">
                                 <li>
                                     <i class='bx bxs-star' style='color:#ddc04c'  ></i> <?php echo $row['rating']; ?>
                                     <p float-right><?php echo $row['location']; ?>, Kenya</p>
                                 </li>
-                               
-                                
+
+
                             </div>
                             <div class="bottom-details">
                                 <span>Price: Ksh <?php echo $row['price']; ?></span>
@@ -208,16 +210,16 @@ try {
                                 <button class="btn">
                                  <a href="vendor_details.php?vendor_id=<?php echo $row['vendor_id']; ?>" style="text-decoration: none; color: inherit;">View More</a>
                                 </button>
-                            
+
                                 </div>
                             </div>
-                    </div>                  
+                    </div>
 
                     </div>
                     <?php $count++; ?>
-                                      <?php endforeach; ?>   
+                                      <?php endforeach; ?>
                 </div>
-                
+
                 </div>
                 </div>
                 <!-- <footer class="footer">
@@ -234,7 +236,7 @@ try {
                             <ul>
                                 <li><a href="#">Location 1</a></li>
                                 <li><a href="#">Location 2</a></li>
-                              
+
                             </ul>
                         </div>
                         <div class="footer-column">
@@ -242,7 +244,7 @@ try {
                             <ul>
                                 <li><a href="#">Link 1</a></li>
                                 <li><a href="#">Link 2</a></li>
-                              
+
                             </ul>
                         </div>
                         <div class="footer-column">
@@ -250,18 +252,18 @@ try {
                             <ul>
                                 <li>Email: info@example.com</li>
                                 <li>Phone: +1234567890</li>
-                               
+
                             </ul>
                         </div>
                     </div>
                 </footer> -->
         </div>
-       
+
           </div>
-          
-        
+
+
         <script src="script.js">
-          
+
         </script>
     </div>
 </div>

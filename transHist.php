@@ -209,7 +209,7 @@ try {
     </head>
     <body>
       
-    <?php include 'clientHeader.php'; ?>
+    <?php include 'resuableComponents\clientHeader.php'; ?>
         
             <!--Maindashboard--> 
             <main>

@@ -2,8 +2,6 @@
 include 'connection.php'; // Ensure connection to the database
 include 'login.php';
 
-// session_start(); // Start session to access session variables
-
 $rows = [];
 try {
     // Check if the user is logged in and get their user_id
@@ -27,7 +25,7 @@ try {
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } else {
         // Handle case where user is not logged in
-       
+        // Redirect or handle as per your application's logic
     }
 
 } catch (PDOException $e) {
@@ -62,6 +60,7 @@ try {
             padding: 5px 10px;
             border-radius: 9999px;
             overflow: hidden;
+            width: 100px;
             cursor: pointer;
             font-family: Verdana, Geneva, Tahoma, sans-serif;
         }
@@ -240,79 +239,59 @@ main{
     </head>
     <body>
       
-    <?php include 'clientHeader.php'; ?>
+    <?php include 'resuableComponents\clientHeader.php'; ?>
         
             <!--Maindashboard--> 
             <main>
             <div class="dashboard-container">
                
-                <div class="card detail">
-                    <h2>My Bookings</h2>
-                     <div class="detail-header">
-                                           
-                        <div class="filterEntries">
-                            <!-- <div class="entries">
-                                Show <select name="" id="table_size">
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select> entries
-                            </div> -->
-                            <div class="button-container">
-                        <button id="" class="filter-button" >Confirmed</button>
-                        <button id="" class="filter-button" >Pending</button>
-                        <button id="" class="filter-button" >Cancelled</button>
-                    </div>
-                            <div class="filter">
-                                
-                                <input type="search" name="" id="search" placeholder="Search bookings">
-                            </div>
-                        </div>
-                         
-                        <!-- <select id="filterDropdown">
-                            <option value="all">All</option>
-                            <option value="category2">Booked</option>
-                            <option value="category1">Pending</option>
-                            <option value="category2">Cancelled</option>
-                            <option value="category1">Paid</option>
-                            <option value="category2">Due</option>
-                            
-                        </select> -->
-                   
-                     </div>
-                     <!-- end of header section -->
-                     <table>
-    <thead>
-        <tr>
-            <th>Booking #</th>
-            <th>Booking Date</th>
-            <th>Event Date</th>
-            <th>Service Booked</th>
-            <th>Vendor</th>
-            <th>Booking status</th>
-            <th>Payment status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($rows as $row): ?>
-            <tr data-booking-id="<?php echo $row['booking_id']; ?>">
-                <td><?php echo $row['booking_id']; ?></td>
-                <td><?php echo $row['booking_date']; ?></td>
-                <td><?php echo $row['event_date']; ?></td>
-                <td><?php echo $row['service_name']; ?></td>
-                <td><?php echo $row['vendor_name']; ?></td>
-                <td><?php echo $row['status']; ?></td>
-                <td><span class="status fullfilled"><?php echo $row['payment_status']; ?></span></td>
-                <td>
-                    <i class="material-symbols-outlined view">visibility</i>
-                    <span class="material-symbols-outlined delete">delete</span>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+            <div class="card detail">
+        <h2>My Bookings</h2>
+        <div class="detail-header">
+            <div class="filterEntries">
+                <div class="button-container">
+                    <button id="all" class="filter-button">All</button>
+                    <button id="confirmedStatus" class="filter-button">Confirmed</button>
+                    <button id="pendingStatus" class="filter-button">Pending</button>
+                    <button id="cancelledStatus" class="filter-button">Cancelled</button>
+                </div>
+                <div class="filter">
+                    <input type="search" name="" id="search" placeholder="Search bookings">
+                </div>
+            </div>
+        </div>
+        <table id="bookingsTable">
+            <thead>
+                <tr>
+                    <th>Booking #</th>
+                    <th>Booking Date</th>
+                    <th>Event Date</th>
+                    <th>Service Booked</th>
+                    <th>Vendor</th>
+                    <th>Booking status</th>
+                    <th>Payment status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($rows as $row): ?>
+                    <tr data-status="<?php echo $row['status']; ?>">
+                        <td><?php echo $row['booking_id']; ?></td>
+                        <td><?php echo $row['booking_date']; ?></td>
+                        <td><?php echo $row['event_date']; ?></td>
+                        <td><?php echo $row['service_name']; ?></td>
+                        <td><?php echo $row['vendor_name']; ?></td>
+                        <td><?php echo $row['status']; ?></td>
+                        <td><span class="status fullfilled"><?php echo $row['payment_status']; ?></span></td>
+                        <td>
+                            <i class="material-symbols-outlined view">visibility</i>
+                            <span class="material-symbols-outlined delete">delete</span>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
 <!-- Edit Popup Modal -->
 <div id="editModal" class="modal">
     <div class="modal-content">
@@ -437,7 +416,11 @@ main{
         }
     }
 
-        </script>
+
+     
+    </script>
+    <script src="resuableComponents\filterbookings.js"></script>
+
     </body>
 </html>
 

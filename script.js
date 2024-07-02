@@ -36,69 +36,70 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (registerForm) {
-        registerForm.addEventListener('submit', (event) => {
-            event.preventDefault();
+    // if (registerForm) {
+    //     registerForm.addEventListener('submit', (event) => {
+    //         event.preventDefault();
 
-            // Get form values
-            const username = registerForm.elements['Username'].value;
-            const email = registerForm.elements['email'].value;
-            const password = registerForm.elements['Password'].value;
-            const confirmPassword = registerForm.elements['confirmPassword'].value;
-            const role = registerForm.elements['role'].value;
-            const agreeTerms=registerForm.elements['agreeTerms'].checked;
+    //         // Get form values
+    //         const username = registerForm.elements['Username'].value;
+    //         const usernameError = document.getElementById('usernameError');
+    //         const email = registerForm.elements['email'].value;
+    //         const password = registerForm.elements['Password'].value;
+    //         const confirmPassword = registerForm.elements['confirmPassword'].value;
+    //         const role = registerForm.elements['role'].value;
+    //         const agreeTerms=registerForm.elements['agreeTerms'].checked;
 
-            if (username.trim() === '' || password.trim() === '' || email.trim() === '' || confirmPassword.trim() === '') {
-                alert('Please fill in all fields.');
-                return;
-            }
-            if (password.length < 8 || !/\d/.test(password)) {
-                alert('Password must contain at least one number and be at least 8 characters long.');
-                return;
-            }
-            if (password !== confirmPassword) {
-                alert('Passwords do not match.');
-                return;
-            }
-            if (email.indexOf('@') === -1 || email.lastIndexOf('.') < email.indexOf('@') + 2 || email.lastIndexOf('.') + 2 >= email.length) {
-                alert('Please enter a valid email address.');
-                return;
-            }
-            if(!agreeTerms){
-                alert('Please agree to the terms & conditions.')
-                return
-            }
-            // Construct form data including the hidden field
-            const formData = new FormData(registerForm);
-            formData.append('register_user_form', '1');
+    //         if (username.trim() === '' || password.trim() === '' || email.trim() === '' || confirmPassword.trim() === '') {
+    //             alert('Please fill in all fields.');
+    //             return;
+    //         }
+    //         if (password.length < 8 || !/\d/.test(password)) {
+    //             alert('Password must contain at least one number and be at least 8 characters long.');
+    //             return;
+    //         }
+    //         if (password !== confirmPassword) {
+    //             alert('Passwords do not match.');
+    //             return;
+    //         }
+    //         if (email.indexOf('@') === -1 || email.lastIndexOf('.') < email.indexOf('@') + 2 || email.lastIndexOf('.') + 2 >= email.length) {
+    //             alert('Please enter a valid email address.');
+    //             return;
+    //         }
+    //         // if(!agreeTerms){
+    //         //     alert('Please agree to the terms & conditions.')
+    //         //     return
+    //         // }
+    //         // Construct form data including the hidden field
+    //         const formData = new FormData(registerForm);
+    //         formData.append('register_user_form', '1');
 
-            // Submit the form data
-            fetch('insert.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(data => console.log(data))
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+    //         // Submit the form data
+    //         fetch('insert.php', {
+    //             method: 'POST',
+    //             body: formData
+    //         })
+    //         .then(response => response.text())
+    //         .then(data => console.log(data))
+    //         .catch((error) => {
+    //             console.error('Error:', error);
+    //         });
 
-            if (logregBox) {
-                for (let i = 0; i < userOptions.length; i++) {
-                    if (userOptions[i].checked) {
-                        if (userOptions[i].value === 'Client') {
-                            logregBox.classList.add('setup-client-active');
-                            logregBox.classList.remove('setup-vendor-active');
-                        } else if (userOptions[i].value === 'Vendor') {
-                            logregBox.classList.add('setup-vendor-active');
-                            logregBox.classList.remove('setup-client-active');
-                        }
-                        break;
-                    }
-                }
-            }
-        });
-    }
+    //         if (logregBox) {
+    //             for (let i = 0; i < userOptions.length; i++) {
+    //                 if (userOptions[i].checked) {
+    //                     if (userOptions[i].value === 'Client') {
+    //                         logregBox.classList.add('setup-client-active');
+    //                         logregBox.classList.remove('setup-vendor-active');
+    //                     } else if (userOptions[i].value === 'Vendor') {
+    //                         logregBox.classList.add('setup-vendor-active');
+    //                         logregBox.classList.remove('setup-client-active');
+    //                     }
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     });
+    // }
 });
 
 //handle form submissions
@@ -166,43 +167,43 @@ function validateLoginForm() {
 
 
 
-function validatesetupClientForm() {
-    // Retrieve input values
-    var fname = document.setupclient.fname.value;
-    var lname = document.setupclient.lname.value;
-    var contact_number = document.setupclient.contact_number.value;
-    var location = document.setupclient.location.value;
-    var wedding_date = document.setupclient.wedding_date.value;
+// function validatesetupClientForm() {
+//     // Retrieve input values
+//     var fname = document.setupclient.fname.value;
+//     var lname = document.setupclient.lname.value;
+//     var contact_number = document.setupclient.contact_number.value;
+//     var location = document.setupclient.location.value;
+//     var wedding_date = document.setupclient.wedding_date.value;
    
-    // Perform validation
-    if (fname == null || fname == '' || lname == null || lname == '' || contact_number == null || contact_number == '' || location == null || location == '' || wedding_date == null || wedding_date == '') {
-        alert('Please fill in all fields.');
-        return false;
-    } else if (isNaN(contact_number)) {
-        alert('Contact number should be a numeric value only');
-        return false;
-    }
+//     // Perform validation
+//     if (fname == null || fname == '' || lname == null || lname == '' || contact_number == null || contact_number == '' || location == null || location == '' || wedding_date == null || wedding_date == '') {
+//         alert('Please fill in all fields.');
+//         return false;
+//     } else if (isNaN(contact_number)) {
+//         alert('Contact number should be a numeric value only');
+//         return false;
+//     }
     
     
-    return true; // Form is valid
-}
+//     return true; // Form is valid
+// }
 
 
 
-function validateSetupVendorForm() {
-    // Retrieve input values
-    var vendor_name = document.setupvendor.vendor_name.value;
-    var category = document.setupvendor.category.value;
-    var location = document.setupvendor.location.value;
+// function validateSetupVendorForm() {
+//     // Retrieve input values
+//     var vendor_name = document.setupvendor.vendor_name.value;
+//     var category = document.setupvendor.category.value;
+//     var location = document.setupvendor.location.value;
     
    
-    // Perform validation
-    if (vendor_name == null || vendor_name == '' || category == null || category == '' || location == null || location == '') {
-        alert('Please fill in all fields.');
-        return false;
-    } 
-    return true; // Form is valid
-}
+//     // Perform validation
+//     if (vendor_name == null || vendor_name == '' || category == null || category == '' || location == null || location == '') {
+//         alert('Please fill in all fields.');
+//         return false;
+//     } 
+//     return true; // Form is valid
+// }
 //favourites
 // function toggleHeart(element) {
 //     if (element.classList.contains('bx-heart')) {

@@ -3,14 +3,19 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require_once 'connection.php';
+
     $username = $_POST['username'];
     $password = $_POST['password'];
+
+    error_log("Username: $username, Password: $password");
 
     $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
     $stmt->bindParam(':username', $username);
     $stmt->execute();
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    error_log("User: " . print_r($user, true));
 
     if ($user && $user['password'] === $password) {
         // Authentication successful
@@ -41,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit(); // Exit to prevent further output
     } else {
         // Authentication failed, redirect back to login page with error message
-        header("Location: login.html?error=1");
+        header("Location: index.html?error=1");
         exit(); // Exit to prevent further output
     }
 }

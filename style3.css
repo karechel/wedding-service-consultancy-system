@@ -894,6 +894,7 @@ li{
    }
    .service-blocks .top-details{
     border-bottom: 1px solid #ccc;
+    text-align: center;
    }
    .rating ul {
     list-style: none; 
@@ -902,18 +903,21 @@ li{
     margin-top: 10px;
 }
 .block-buttons .btn{
-    margin-top: 65px;
     padding: 10px 20px;
-    background-color: #e3bdb5;
+    background-color: #242923;
     color: #fff;
     border: none;
     border-radius: 5px;
     margin-right: 10px;
+    width: 90px;
     cursor: pointer;
     margin-top: 10px;
+    height: 50px;
 }
 .bottom-details{
     margin-top: 10px;
+    text-align: center;
+    font-weight: 700;
    }
    .bottom-details .block-buttons{
     display: flex;

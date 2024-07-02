@@ -2,7 +2,7 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'poppins,san-serif';
+    font-family: sans-serif;
 
 }
 body{
@@ -236,11 +236,39 @@ body{
     border: none;
     outline: none;
     font-size: 16px;
-    color: #e4e4e4;
+    color: black;
     font-weight: 500;
     padding-right: 28px;
 }
+form-box {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
 
+.input-box {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.required {
+    color: red;
+}
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    position: absolute;
+    left: 0;
+}
 
 .input-box label{
     position: absolute;

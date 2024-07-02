@@ -7,6 +7,11 @@
         <title>Website with Login and Registration Form</title>
         <link rel="stylesheet" href="style.css">
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        input:-internal-autofill-selected {
+            background-color: white;
+        }
+    </style>
     </head>
     <body>
         <header class="header">
@@ -17,10 +22,7 @@
               
                 
             </nav>
-            <!-- <form action="#" class="search-bar"> 
-                <input type="text" placeholder="Search...">
-                <button type="submit"><i class='bx bx-search'></i></button>
-            </form>   -->
+          
           </header>
           <div class="background"></div>
           <div class="container">
@@ -34,151 +36,151 @@
             </div>
 
           <div class="logreg-box">
-            <div class="form-box login ">
-                <form id="login-form" name="loginform" action="login.php" method="post" autocomplete="off" onsubmit="return validateLoginForm()" >
+            <div class="form-box login">
+                <form autocomplete="on" id="login-form" name="loginform" action="login.php" method="post">
                     <h2>Sign In</h2>
-
+            
                     <div class="input-box">
-                        <span class="icon"><i class='bx bxs-envelope'></i></span>
-                        <input type="text" name="username" >
-                        <label >Username</label>
+                        <input type="text" id="username" name="username">
+                        <label>Username <span class="required">*</span></label>
+                        <span class="error-message" id="usernameError"></span>
                     </div>
                     <div class="input-box">
-                        <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
-                        <input type="text" name="password" >
-                        <label >Password</label>
+                        <input type="text" id="password" name="password">
+                        <label>Password <span class="required">*</span></label>
+                        <span class="toggle-password"><i class='bx bxs-show' id="togglePassword"></i></span>
+                        <span class="error-message" id="passwordError"></span>
                     </div>
-                    <div class="remember-forget">
-                        <label ><input type="checkbox">Remenber me</label>
-                        <a href="#">Forgot password</a>
+                    <button type="submit" class="btn">Sign In</button>
+                    <div class="login-register">
+                        <p>New around here? <a href="#" class="register-link">Sign Up</a></p>
                     </div>
-                  <button type="submit" class="btn" >Sign In</button>
-                  <div class="login-register">
-                    <p>New around here? <a href="#" class="register-link">Sign Up</a></p>
-                    
-                  </div>
                 </form>
             </div>
-            <div class="form-box register ">
-                <form  action="insert.php" method="post" autocomplete="off" onsubmit="return validatesignupForm()">
+            
+            
+            <div class="form-box register">
+                <form autocomplete="on" id="registerform" action="insert.php" method="post" autocomplete="off">
                     <input type="hidden" name="register_user_form" value="1">
                     <h2>Sign Up</h2>
                     <div class="input-box">
-                        <span class="icon"><i class='bx bxs-user'></i></i></span>
-                        <input type="text" name="Username" >
-                        <label >Username</label>
+                        <span class="icon"><i class='bx bxs-user'></i></span>
+                        <input type="text" id="rUsername" name="Username">
+                        <label>Username <span class="required">*</span></label>
+                        <span class="error-message" id="rusernameError"></span>
                     </div>
                     <div class="input-box">
                         <span class="icon"><i class='bx bxs-envelope'></i></span>
-                        <input type="text" name="email" >
-                        <label >Email</label>
+                        <input type="text" id="email" name="email">
+                        <label>Email <span class="required">*</span></label>
+                        <span class="error-message" id="emailError"></span>
                     </div>
                     <div class="input-box">
-                        <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
-                        <input type="text" name="Password" >
-                        <label >Password</label>
-                    </div> 
+                        <!-- <span class="icon"><i class='bx bxs-lock-alt'></i></span> -->
+                        <input type="text" id="rPassword" name="Password">
+                        <label>Password <span class="required">*</span></label>
+                        <span class="error-message" id="rPasswordError"></span>
+                        <span class="toggle-password" id="rtogglePassword"><i class='bx bxs-show'></i></span>
+                    </div>
                     <div class="input-box">
-                        <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
-                        <input type="text" name="confirmPassword" >
-                        <label >ConfirmPassword</label>
-                    </div> 
-                     
-                    <input type="radio" id="user" name="role" value="Client">
-                    <label for="">Client</label>
-                    <input type="radio" id="user" name="role" value="Vendor">
-                    <label for="">Vendor</label>
-
-                    <!-- <div class="terms-conditions">
-                        <label ><input name="agreeTerms"  type="checkbox">I agree to the terms & conditions</label>
-                       
-                    </div> -->
-
-              
-                  <button type="submit" class="continue btn">continue</button>
-                 
-                  <div class="login-register">
-                    <p>One of us? <a href="#" class="login-link">Sign In</a></p>
-                    
-                    
-                  </div>
+                        <span class="icon"><i class='bx bxs-lock-alt'></i></span>
+                        <input type="text" id="confirmPassword" name="confirmPassword">
+                        <label>Confirm Password <span class="required">*</span></label>
+                        <span class="error-message" id="confirmPasswordError"></span>
+                    </div>
+                    <input type="radio" id="client" name="role" value="Client">
+                    <label for="client">Client</label>
+                    <input type="radio" id="vendor" name="role" value="Vendor">
+                    <label for="vendor">Vendor</label>
+                    <div class="terms-conditions">
+                        <label><input name="agreeTerms" id="agreeTerms" type="checkbox"> I agree to the terms & conditions</label>
+                    </div>
+                    <button type="submit" class="continue btn">Continue</button>
+                    <div class="login-register">
+                        <p>One of us? <a href="#" class="login-link">Sign In</a></p>
+                    </div>
                 </form>
             </div>
-            <div class="form-box setup-client " >
-                        
-                <form name="setupclient" action="insert.php" method="post" autocomplete="off" onsubmit="return validatesetupClientForm()">
+            
+            
+            <div class="form-box setup-client">
+                <form autocomplete="on" name="setupclient" id="setupclientForm" action="insert.php" method="post" autocomplete="off">
                     <input type="hidden" name="client-account" value="1">
                     <h2>Setup Account</h2>
                     <div class="name-container">
-                    <div class="input-box">
-                        <span class="icon"><i class='bx bxs-user'></i></i></span>
-                        <input type="text" name="fname" >
-                        <label >First name</label>
+                        <div class="input-box">
+                            <span class="icon"><i class='bx bxs-user'></i></span>
+                            <input type="text" id="fname" name="fname">
+                            <label>First name <span class="required">*</span></label>
+                            <span class="error-message" id="fnameError"></span>
+                        </div>
+                        <div class="input-box">
+                            <span class="icon"><i class='bx bxs-user'></i></span>
+                            <input type="text" id="lname" name="lname">
+                            <label>Last name <span class="required">*</span></label>
+                            <span class="error-message" id="lnameError"></span>
+                        </div>
                     </div>
-                    <div class="input-box">
-                        <span class="icon"><i class='bx bxs-user'></i></i></span>
-                        <input type="text" name="lname" >
-                        <label >Last name</label>
-                    </div>
-                </div>  
                     <div class="input-box">
                         <span class="icon"><i class='bx bxs-envelope'></i></span>
-                        <input type="text" name="contact_number" >
-                        <label >Contact Number</label>
+                        <input type="text" id="contact_number" name="contact_number">
+                        <label>Contact Number <span class="required">*</span></label>
+                        <span class="error-message" id="contactError"></span>
                     </div>
                     <div class="input-box">
-                        <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
-                        <input type="text" name="location" >
-                        <label >Location</label>
-                    </div> 
+                        <span class="icon"><i class='bx bxs-lock-alt'></i></span>
+                        <input type="text" id="location" name="location">
+                        <label>Location <span class="required">*</span></label>
+                        <span class="error-message" id="locationError"></span>
+                    </div>
                     <div class="input-box">
-                        <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
-                        <input type="date" name="wedding_date" >
-                        <label >Wedding Date</label>
-                    </div> 
-
-                  <button type="submit" class="btn signup">Sign Up</button>
-                  
+                        <span class="icon"><i class='bx bxs-lock-alt'></i></span>
+                        <input type="date" id="wedding_date" name="wedding_date">
+                        <label>Wedding Date <span class="required">*</span></label>
+                        <span class="error-message" id="weddingDateError"></span>
+                    </div>
+                    <button type="submit" class="btn signup">Sign Up</button>
                 </form>
-                  </div>
-                  <div class="form-box setup-vendor" >
-                        
-                    <form  name="setupvendor"action= "insert.php" method="post" autocomplete="off" onsubmit="return validateSetupVendorForm()">
-                        <input type="hidden" name="vendor-account" value="1">
-                        <h2>Setup Account</h2>
-                        
-                        <div class="input-box">
-                            <span class="icon"><i class='bx bxs-user'></i></i></span>
-                            <input type="text" name="vendor_name" >
-                            <label >Business name</label>
-                        </div>
-                
-                        <div class="input-box">
-                            <span class="icon"><i class='bx bxs-envelope'></i></span>
-                            <input type="text" name="category" >
-                            <label >Category/services</label>
-                        </div>
-                        <div class="input-box">
-                            <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
-                            <input type="text" name="location" >
-                            <label >Location</label>
-                        </div> 
-                        <div class="textarea-box">
-                            <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
-                            <textarea name="description" ></textarea>
-                            <label >Description</label>
-                        </div> 
-                        
-                        
-                      <button type="submit" class="btn signup">Sign Up</button>
-                      
-                    </form>
-                      </div>
+            </div>
+            
+            <div class="form-box setup-vendor">
+                <form autocomplete="on" name="setupvendor" id="setupvendorForm" action="insert.php" method="post" autocomplete="off">
+                    <input type="hidden" name="vendor-account" value="1">
+                    <h2>Setup Account</h2>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-user'></i></span>
+                        <input type="text" id="vendor_name" name="vendor_name">
+                        <label>Business name <span class="required">*</span></label>
+                        <span class="error-message" id="vendorNameError"></span>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-envelope'></i></span>
+                        <input type="text" id="category" name="category">
+                        <label>Category/services <span class="required">*</span></label>
+                        <span class="error-message" id="categoryError"></span>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-lock-alt'></i></span>
+                        <input type="text" id="rlocation" name="location">
+                        <label>Location <span class="required">*</span></label>
+                        <span class="error-message" id="rlocationError"></span>
+                    </div>
+                    <div class="textarea-box">
+                        <span class="icon"><i class='bx bxs-lock-alt'></i></span>
+                        <textarea id="description" name="description"></textarea>
+                        <label>Description <span class="required">*</span></label>
+                        <span class="error-message" id="descriptionError"></span>
+                    </div>
+                    <button type="submit" class="btn signup">Sign Up</button>
+                </form>
+            </div>
+            
         </div>
        
           </div>
           
 
         <script src="script.js"></script>
+        <script src="validation1.js"></script>
     </body>
 </html>
