@@ -5,7 +5,6 @@ if (isset($_POST['booking_id']) && isset($_POST['status'])) {
     $bookingId = $_POST['booking_id'];
     $status = $_POST['status'];
 
-
     try {
         $stmt = $pdo->prepare("UPDATE bookings SET status = :status WHERE booking_id = :booking_id");
         $stmt->execute([

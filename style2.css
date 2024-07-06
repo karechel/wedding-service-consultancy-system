@@ -975,51 +975,65 @@ header img{
   .sec-images {
     display: flex;
     flex-direction: row;
+    width: 100%;    
+    margin-left: 50px;
 }
 
 .main-image {
     width: 100%;
     height: 460px;
     margin-bottom: 20px;
-    border-radius: 8px;
+    /* border-radius: 8px; */
     margin-left: 50px;
+    margin-top: 100px;
 }
 
 .sec-image {
-    width: 90%;
-    height: 220px;
+    width: 24.9%;
+    height: 150px;
     margin-bottom: 20px;
-    border-radius: 8px;
-    margin-left: 50px;
+    /* border-radius: 8px; */
+    margin-left: 1px;
 }
 
 .vendor-content {
     display: flex;
-    flex-direction: column;
-    /* margin-top: 150px; */
+    flex-direction: row;
+    margin-bottom: 100px;
 }
 
 .all-details {
-    width: 30%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center horizontally */
-    margin-left: 250px;
+    margin-top: 110px;
+    width: 50%;
+    margin-left: 100px;
     font-size: 1rem;
     line-height: 1.5rem;
     font-family: ProximaNova, ProximaNova-fallback-Arial, sans-serif;
     font-style: normal;
     font-weight: 400;
 }
-
+.all-details .category{
+    font-size: 2rem;
+    line-height: 2.5rem;
+    font-weight: 600;    
+}
+.all-details .price{
+    font-size: 1.5rem;
+    line-height: 2.5rem;  
+}
+.all-details .bottom-details{
+    border-top: 1px solid black;
+    margin-top: 50px;
+}
 .details {
     margin-bottom: 20px;
 }
 
 .gallery {
-    width: 70%;
+    width: 50%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    margin-left: 150px;
 }
 
 button {
@@ -1037,7 +1051,7 @@ button:hover {
 }
 .vendor_name{
     font-family: ProximaNova, ProximaNova-fallback-Arial, sans-serif;
-    font-size: 1.5rem;
+    font-size: 1rem;
     line-height: 2.5rem;
 }
 .des{
@@ -1046,6 +1060,9 @@ button:hover {
     font-style: normal;
     font-weight: 400;
     width: 70%;
+    height: 100px;
+    border: 1px solid #ddd;
+    padding: 15px 5px 0 5px;
 }
 .des_heading{
     font-size: 1.25rem;
@@ -1127,19 +1144,56 @@ select {
 }
 
 button[type="submit"] {
-    background-color: #4CAF50;
+    background-color: black;
     color: white;
     padding: 10px 20px;
     border: none;
+    width: 150px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
 }
 
 button[type="submit"]:hover {
-    background-color: #45a049;
+    background-color: #e3bdb5;
 }
 
 label > input[type="checkbox"] {
     margin-right: 5px;
 }
+  
+        /*  more details section */
+        .more-details {
+            margin-top: 20px;
+            margin-left: 200px;
+        }
+        .buttons {
+            display: flex;
+            margin-left: 5px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            border-radius: 0;
+            border: 1px solid #ddd;
+            background-color: #eaedee;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 150px;
+            height: 50px;
+            font-weight: 600;
+        }
+        .tab-button:hover {
+            background-color: #ccc;
+        }
+        .tab-button.active {
+            background-color: #fff;
+            color: orange;
+            font-weight: 600;
+        }
+        .tab-content {
+            display: none;
+        }
+   
+     .details .top-content .timestamp{
+        margin-left: 750px;
+      }

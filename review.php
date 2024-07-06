@@ -1,24 +1,34 @@
 <?php
 include 'connection.php'; // Ensure connection to the database
- 
+include 'login.php';
+
 $rows = [];
 try {
-    // SQL query to select data from the tables
-    $sql = "SELECT services.service_name, vendor_services.price, vendor_services.rating ,vendors.location,vendors.vendor_name,vendor_services.image, vendors.vendor_id
-    FROM services
-    JOIN vendor_services ON services.service_id = vendor_services.service_id
-    JOIN vendors ON vendor_services.vendor_id=vendors.vendor_id";
-    
+    // Check if the user is logged in and get their user_id
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
 
-    // Execute query
-    $stmt = $pdo->query($sql);
-    
+        // SQL query to select data from the tables filtered by the logged-in user
+        $sql = "SELECT bookings.booking_id, vendors.vendor_name, services.service_name, bookings.status,vendors.vendor_id
+        FROM bookings
+        JOIN clients ON bookings.client_id = clients.client_id
+        JOIN services ON bookings.service_id = services.service_id
+        JOIN vendors ON bookings.vendor_id = vendors.vendor_id
+        WHERE clients.user_id = :user_id
+        AND bookings.status = 'Completed'";
+
+
+        // Prepare and execute query
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+
         // Fetch all rows as associative array
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-   
-
-    // Debug: Check if $rows is populated
-    // var_dump($rows);
+    } else {
+        // Handle case where user is not logged in
+        // Redirect or handle as per your application's logic
+    }
 
 } catch (PDOException $e) {
     // Handle errors gracefully
@@ -33,6 +43,7 @@ try {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Website with Login and Registration Form</title>
         <link rel="stylesheet" href="style3.css">
+   
         <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
@@ -109,7 +120,8 @@ try {
                               
                                 <div class="block-buttons">
                                 <button class="btn">
-                                 <a href="rating.php?vendor_id=<?php echo $row['vendor_id']; ?>" style="text-decoration: none; color: inherit;">Rate Vendor</a>
+                                    
+                           <a href="rating.php?booking_id=<?php echo $row['booking_id']; ?>&vendor_id=<?php echo $row['vendor_id']; ?>" style="text-decoration: none; color: inherit;">Rate Vendor</a>
                                 </button>
                             
                                 </div>
@@ -122,41 +134,7 @@ try {
                 </div>
                 
                 </div>
-                <footer class="footer">
-                    <div class="footer-heading">
-                        <h3>Start Today</h3>
-                    </div>
-                    <div class="footer-buttons">
-                        <button class="btn">Add Listing</button>
-                        <button class="btn">Browse Listings</button>
-                    </div>
-                    <div class="footer-columns">
-                        <div class="footer-column">
-                            <h4>Locations</h4>
-                            <ul>
-                                <li><a href="#">Location 1</a></li>
-                                <li><a href="#">Location 2</a></li>
-                                <!-- Add more locations as needed -->
-                            </ul>
-                        </div>
-                        <div class="footer-column">
-                            <h4>Quick Links</h4>
-                            <ul>
-                                <li><a href="#">Link 1</a></li>
-                                <li><a href="#">Link 2</a></li>
-                                <!-- Add more quick links as needed -->
-                            </ul>
-                        </div>
-                        <div class="footer-column">
-                            <h4>Contacts</h4>
-                            <ul>
-                                <li>Email: info@example.com</li>
-                                <li>Phone: +1234567890</li>
-                                <!-- Add more contact information as needed -->
-                            </ul>
-                        </div>
-                    </div>
-                </footer>
+                <?php include 'resuableComponents\footer.php'; ?>
         </div>
        
           </div>

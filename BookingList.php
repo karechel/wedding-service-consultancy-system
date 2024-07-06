@@ -42,166 +42,13 @@ try {
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style3.css">
+        <link rel="stylesheet" href="BookingsList.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=poppins&display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=poppins&display=swap">
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
         <title>Bookings</title>
-    <style>
-         body{
-                background: #ededed;
-                        }
-        .button-container {
-            position: absolute;
-            display: block;
-        }
-       .filter-button {
-            background: none;
-            border: none !important;
-            font-weight: 500;
-            padding: 5px 10px;
-            border-radius: 9999px;
-            overflow: hidden;
-            cursor: pointer;
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-        }
-        .filter-button:hover {
-            background-color: #e2e8f0;
-        }
-        .filter-button.active {
-            background-color: #64748b;
-            color: white;
-        }
-        .events-container h1, h2 {
-    margin-bottom: 10px;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-.filter input {
-    padding: 7px 10px;
-    border: 1px solid #ced7e3;
-    color: #000;
-    background: #fff;
-    border-radius: 24px;
-    outline: none;
-    transition: 0.3s ease;
-    position: absolute;
-    left: 73%;
-}
-.addBookingBtn button {
-    color: #fff;
-    background: transparent;
-    font-size: 16px;
-    cursor: pointer;
-    pointer-events: auto;
-    outline: none;
-    border: 1px solid #4f46e5;
-    background: #4f46e5;
-    border-radius: 25px;
-    height: 30px;
-    width: 100px;
-    justify-content: center;
-    display: flex;
-    align-items: center
-}
-
-.detail table th, .detail table td {
-    padding: 0.8rem 0.2rem;
-    text-align: left;
-    min-width: 112px;
-    font-size: 14px;
-    font-family: math;
-}
-.material-symbols-outlined {
-        font-size: 18px;
-        cursor: pointer;
-}
-    .navbar {
-    padding-left: 70px;
-    height: 4rem;
-    }
-        .navbar a{
-            left: 87%;
-            font-size: 1.3rem;
-        }
-        .navbar img{
-            margin-left: 80px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .dropdown-container {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 24px;
-        }
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            border-radius: 5px;
-            background-color: white;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            min-width: 160px;
-        }
-        .dropdown-menu a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-        .dropdown-menu a:hover {
-            background-color: #e2e8f0;
-            width: 100%;
-            border-radius: 25px;
-        }
-        .divider {
-            height: 1px;
-            background-color: #ccc;
-            margin: 8px 0;
-        }
-        .navbar .dropdown-container{
-            left: 87%;
-        }
-        .dropdown-container a{
-            position:static ;
-            font-size: 1rem;
-        }
-    </style>
+   
     </head>
     <body>
       
@@ -333,14 +180,12 @@ try {
         <form id="editForm">
             <input type="hidden" id="editBookingId" name="booking_id">
             <label for="editStatus">Booking Status:</label>
-            <input type="text" id="editStatus" name="status" required>
-            <label for="editPaymentStatus">Payment Status:</label>
-            <input type="text" id="editPaymentStatus" name="payment_status" required>
+            <input type="text" id="editStatus" name="status" >
             <button type="submit">Save Changes</button>
         </form>
     </div>
 </div>
-                     <footer>
+                     <!-- <footer>
                         <span>showing 1 of 10 of 50 entries</span>
                         <div class="pagination">
                             <button>prev</button>
@@ -351,93 +196,12 @@ try {
                             <button>5</button>
                             <button>Next</button>
                         </div>
-                     </footer>
+                     </footer> -->
                 </div>
                
             </div>
         </main>
         <script>
-            document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById("editModal");
-    const span = document.getElementsByClassName("close")[0];
-
-    document.querySelectorAll('.delete').forEach(button => {
-        button.addEventListener('click', function () {
-            const bookingId = this.closest('tr').dataset.bookingId;
-
-            if (confirm('Are you sure you want to delete this booking?')) {
-                fetch('delete_booking.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ booking_id: bookingId })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        this.closest('tr').remove(); // Remove the deleted row from the DOM
-                    } else {
-                        alert('Error deleting booking: ' + data.message);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        });
-    });
-
-    document.querySelectorAll('.edit').forEach(button => {
-        button.addEventListener('click', function () {
-            const bookingId = this.closest('tr').dataset.bookingId;
-            const status = this.closest('tr').querySelector('td:nth-child(7)').innerText;
-            const paymentStatus = this.closest('tr').querySelector('td:nth-child(8) .status').innerText;
-
-            document.getElementById('editBookingId').value = bookingId;
-            document.getElementById('editStatus').value = status;
-            document.getElementById('editPaymentStatus').value = paymentStatus;
-
-            modal.style.display = "block";
-        });
-    });
-
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    document.getElementById('editForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const formData = new FormData(this);
-
-        fetch('update_booking.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                const bookingId = formData.get('booking_id');
-                const status = formData.get('status');
-                const paymentStatus = formData.get('payment_status');
-
-                const row = document.querySelector(`tr[data-booking-id='${bookingId}']`);
-                row.querySelector('td:nth-child(7)').innerText = status;
-                row.querySelector('td:nth-child(8) .status').innerText = paymentStatus;
-
-                modal.style.display = "none";
-            } else {
-                alert('Error updating booking: ' + data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-});
 
 
         //dropdown menu
@@ -461,6 +225,7 @@ try {
     }
 
         </script>
+        <script src="resuableComponents\EditDelete.js"></script>
     </body>
 </html>
 

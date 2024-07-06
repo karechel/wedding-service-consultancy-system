@@ -40,13 +40,14 @@ try {
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style3.css">
+        <!-- <link rel="stylesheet" href="BookingsList.css"> -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=poppins&display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2family=poppins&display=swap">
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
         <title>Bookings</title>
     <style>
-         body{
+        body{
                 background: #ededed;
                         }
         .button-container {
@@ -115,39 +116,7 @@ try {
         cursor: pointer;
 }
    
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .dropdown-container {
+              .dropdown-container {
             position: relative;
             display: inline-block;
         }
@@ -235,10 +204,14 @@ main{
     background-color: #f2f2f2;
     border-bottom: 2px solid #e3bdb5;
 }
+button:hover {
+    background-color: #e3bdb5;
+}
     </style>
     </head>
-    <body>
-      
+   
+        <body>
+  
     <?php include 'resuableComponents\clientHeader.php'; ?>
         
             <!--Maindashboard--> 
@@ -250,9 +223,10 @@ main{
         <div class="detail-header">
             <div class="filterEntries">
                 <div class="button-container">
-                    <button id="all" class="filter-button">All</button>
+                    <button id="AllStatus" class="filter-button">All</button>
                     <button id="confirmedStatus" class="filter-button">Confirmed</button>
                     <button id="pendingStatus" class="filter-button">Pending</button>
+                    <button id="completedStatus" class="filter-button">Completed</button>
                     <button id="cancelledStatus" class="filter-button">Cancelled</button>
                 </div>
                 <div class="filter">
@@ -274,45 +248,43 @@ main{
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($rows as $row): ?>
-                    <tr data-status="<?php echo $row['status']; ?>">
-                        <td><?php echo $row['booking_id']; ?></td>
-                        <td><?php echo $row['booking_date']; ?></td>
-                        <td><?php echo $row['event_date']; ?></td>
-                        <td><?php echo $row['service_name']; ?></td>
-                        <td><?php echo $row['vendor_name']; ?></td>
-                        <td><?php echo $row['status']; ?></td>
-                        <td><span class="status fullfilled"><?php echo $row['payment_status']; ?></span></td>
-                        <td>
-                            <i class="material-symbols-outlined view">visibility</i>
-                            <span class="material-symbols-outlined delete">delete</span>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
+        <?php foreach ($rows as $row): ?>
+            <tr data-booking-id="<?php echo $row['booking_id']; ?>" data-status="<?php echo $row['status']; ?>">
+                <td><?php echo $row['booking_id']; ?></td>
+                <td><?php echo $row['booking_date']; ?></td>
+                <td><?php echo $row['event_date']; ?></td>
+                <td><?php echo $row['service_name']; ?></td>
+                <td><?php echo $row['vendor_name']; ?></td>
+                <td><?php echo $row['status']; ?></td>
+                <td><span class="status fullfilled"><?php echo $row['payment_status']; ?></span></td>
+                <td>
+                    <span class="material-symbols-outlined edit">edit</span>
+                    <span class="material-symbols-outlined delete">delete</span>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
         </table>
 
 <!-- Edit Popup Modal -->
 <div id="editModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Edit Booking</h2>
-        <form id="editForm">
-            <input type="hidden" id="editBookingId" name="booking_id">
-            <label for="editStatus">Booking Status:</label>
-            <input type="text" id="editStatus" name="status" required>
-            <label for="editPaymentStatus">Payment Status:</label>
-            <input type="text" id="editPaymentStatus" name="payment_status" required>
-            <button type="submit">Save Changes</button>
-        </form>
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Booking</h2>
+            <form id="editForm">
+                <input type="hidden" id="editBookingId" name="booking_id">
+                <label for="editStatus">Booking Status:</label>
+                <input type="text" id="editStatus" name="status">
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
     </div>
-</div>
                    
                 </div>
                
             </div>
         </main>
-        <script>
+        <!-- <script>
             document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById("editModal");
     const span = document.getElementsByClassName("close")[0];
@@ -395,33 +367,12 @@ main{
     });
 });
 
-
-        //dropdown menu
-       
-    document.querySelector('.dropdown-btn').addEventListener('click', function() {
-        const dropdownMenu = document.querySelector('.dropdown-menu');
-        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropdown-btn')) {
-            const dropdowns = document.getElementsByClassName("dropdown-menu");
-            for (let i = 0; i < dropdowns.length; i++) {
-                const openDropdown = dropdowns[i];
-                if (openDropdown.style.display === 'block') {
-                    openDropdown.style.display = 'none';
-                }
-            }
-        }
-    }
-
-
      
-    </script>
+    </script> -->
+     <script src="editDelete.js"></script>
     <script src="resuableComponents\filterbookings.js"></script>
-
-    </body>
+    </div>
+    
 </html>
 
 

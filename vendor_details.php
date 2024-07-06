@@ -31,6 +31,18 @@
 
         // Fetch the first row as an associative array
         $vendorDetails = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $feedbackQuery = "SELECT feedback.rating, feedback.comment, DATE(feedback.timestamp) AS comment_date,clients.first_name, clients.last_name
+                      FROM feedback
+                      JOIN clients ON feedback.client_id = clients.client_id
+                      WHERE feedback.vendor_id = :vendor_id";
+
+    // Prepare and execute query to fetch ratings and comments
+    $stmt = $pdo->prepare($feedbackQuery);
+    $stmt->bindParam(':vendor_id', $vendor_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $feedback = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     } catch (PDOException $e) {
         // Handle errors gracefully
         echo "Error: " . $e->getMessage();
@@ -46,35 +58,78 @@
 
   
             <div class="sec-images">
-                <div class="sec_images_one">
+                <!-- <div class="sec_images_one"> -->
                 <img class="sec-image" src="Images/bg1.jpg" alt="Vendor Image 2">
                 <img class="sec-image" src="Images/bg1.jpg" alt="Vendor Image 3">
-                </div>
-                <div class="sec_images_two">
+                <!-- </div> -->
+                <!-- <div class="sec_images_two"> -->
                 <img class="sec-image" src="Images/bg1.jpg" alt="Vendor Image 4">
                 <img class="sec-image" src="Images/bg1.jpg" alt="Vendor Image 5">
-                </div>
+                <!-- </div> -->
             </div>
         </div>
         <div class="all-details">
-            <div class="details vendor_name"><?php echo $vendorDetails['vendor_name']; ?></div>
-            <div class="details"><?php echo $vendorDetails['category']; ?></div>
-            <div class="details"><?php echo $vendorDetails['location']; ?></div>
-            <div class="details"><?php echo $vendorDetails['rating']; ?></div>
-            <div class="details"><?php echo $vendorDetails['price']; ?></div>
-            <form action="books_test.php" method="GET">
+        <div class="category details"><?php echo $vendorDetails['category']; ?></div>
+        <ul class="rating">
+                        <?php for ($i = 0; $i < $vendorDetails['rating']; $i++): ?>
+                            <li>
+                                <i class='bx bxs-star' style='color:#ddc04c'></i>
+                            </li>
+                        <?php endfor; ?>
+                    </ul>
+        <div class="price details">Price: KSH <?php echo $vendorDetails['price']; ?></div>
+        <form action="books_test.php" method="GET">
             <input type="hidden" name="vendor_id" value="<?php echo $vendorDetails['vendor_id']; ?>">
             <button type="submit"> Book Now</button>
             </form>
+           <div class="bottom-details">
+        <div class="details vendor_name">Vendor: <?php echo $vendorDetails['vendor_name']; ?></div>
+        <div class="details">Location: <?php echo $vendorDetails['location']; ?></div>
+           
+        </div>           
         </div>
     </div>
-    <div class="description-content">
-        <div class="des_heading"><p>About the Vendor<p></div>
-        <div class="details des"><?php echo $vendorDetails['description']; ?></div>
-    </div>
-    <div class="service-content">
-        <div class="service_heading"><p>About the Service<p></div>
-        <div class="details des"><?php echo $vendorDetails['other_service_details']; ?></div>
+    <div class="more-details">
+        <div class="buttons">
+            <button class="tab-button" onclick="showTab('description')">DESCRIPTION</button>
+            <button class="tab-button" onclick="showTab('vendor-info')">VENDOR INFO</button>
+            <button class="tab-button" onclick="showTab('reviews')">REVIEWS</button>
+        </div>
+        <div class="tab-content" id="description">
+            <p> <div class="details des"><?php echo $vendorDetails['other_service_details']; ?></div></p>
+        </div>
+        <div class="tab-content" id="vendor-info" style="display:none;">
+            <p>  <div class="details des"><?php echo $vendorDetails['description']; ?></div></p>
+        </div>
+        <div class="tab-content" id="reviews" style="display:none;">
+            
+        
+        <?php foreach ($feedback as $comment): ?>
+           
+            <p>  <div class="details des">
+         
+               <div class="top-content"> <?php echo $comment['first_name']; ?>
+               <small class="timestamp"> <?php echo date('d M Y', strtotime($comment['comment_date'])); ?></small></div>
+
+            <ul class="rating">
+                        <?php for ($i = 0; $i < $comment['rating']; $i++): ?>
+                            <li>
+                                <i class='bx bxs-star' style='color:#ddc04c'></i>
+                            </li>
+                        <?php endfor; ?>
+                    </ul>
+                   
+                    
+                    <strong></strong> <?php echo $comment['comment']; ?><br>
+                    </div></p>
+           
+              
+                
+              
+           
+        <?php endforeach; ?>
+ 
+        </div>
     </div>
     <?php include 'resuableComponents\footer.php' ?>
     <!-- <script>
@@ -83,5 +138,6 @@
             window.location.href = "book.php";
         }
     </script> -->
+    <script src="moreDetails.js"></script>
 </body>
 </html>

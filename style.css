@@ -8,6 +8,9 @@
 body{
     background: #020410;
 }
+.rating-background{
+    background: #f5f5f5;
+}
 .header{
     position: fixed;
     top:0;

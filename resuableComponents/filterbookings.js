@@ -9,10 +9,12 @@ document.getElementById('pendingStatus').addEventListener('click', function() {
 document.getElementById('cancelledStatus').addEventListener('click', function() {
     filterTable('Cancelled');
 });
+document.getElementById('completedStatus').addEventListener('click', function() {
+    filterTable('Completed');
+});
 document.getElementById('AllStatus').addEventListener('click', function() {
     filterTable('all');
 });
-
 
 function filterTable(status) {
     const rows = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
