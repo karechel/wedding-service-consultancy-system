@@ -189,22 +189,7 @@ try {
     </head>
     <body>
       
-       <header class="header">
-            <nav class="navbar">
-                <img src="Images/logo.jpg" width="80" height="60">
-                <a href="#"><i class='bx bx-bell'></i></a>
-                <a href=""><i class='bx bx-message'></i></a>
-                <div class="dropdown-container">
-            <button class="dropdown-btn"><i class='bx bx-user-circle'></i></button>
-             <div class="dropdown-menu">
-             <a href="#"><i class='bx bx-user-circle'></i> Profile</a>
-            <a href="#"><i class='bx bx-cog bx-flip-horizontal' ></i> Settings</a>
-             <div class="divider"></div>
-             <a href="logout.php"><i class='bx bx-exit bx-flip-horizontal'></i> Sign Out</a>
-         </div>
-        </div>
-            </nav>
-        </header>
+    <?php include 'resuableComponents\managerHeader.php' ?>
             <!--sidebar--> 
             <input type="checkbox" id="toggle" >
             <label class="side-toggle" for="toggle"><span ><i class='bx bxs-dashboard' ></i></span></label>
@@ -227,9 +212,6 @@ try {
                 </div>
                 <div class="sidebar-menu">
                     <span class="bx bx-wallet-alt"></span><p><a href="finance.php">Finance</a></p>
-                </div>
-                <div class="sidebar-menu">
-                    <span  class='bx bx-objects-horizontal-left' ></span><p>Reports</p>
                 </div>
                
             </div>
@@ -255,14 +237,7 @@ try {
                         <button id="" class="filter-button" >Pending</button>
                         <button id="" class="filter-button" >Cancelled</button>
                     </div>
-                            <div class="filter">
-                                
-                                <input type="search" name="" id="search" placeholder="Search bookings">
-                            </div>
-                        </div>
-                        <div class="addBookingBtn">
-                            <button><span class="material-symbols-outlined">add</span>Add</button>
-                        </div> 
+                           
                         <!-- <select id="filterDropdown">
                             <option value="all">All</option>
                             <option value="category2">Booked</option>
@@ -301,8 +276,8 @@ try {
                 <td><?php echo $row['status']; ?></td>
                 <td><span class="status fullfilled"><?php echo $row['payment_status']; ?></span></td>
                 <td>
-                    <i class="material-symbols-outlined view">visibility</i>
-                    <span class="material-symbols-outlined edit">edit</span>
+                    
+                   
                     <span class="material-symbols-outlined delete">delete</span>
                 </td>
             </tr>
@@ -324,18 +299,7 @@ try {
         </form>
     </div>
 </div>
-                     <footer>
-                        <span>showing 1 of 10 of 50 entries</span>
-                        <div class="pagination">
-                            <button>prev</button>
-                            <button class="active" >1</button>
-                            <button>2</button>
-                            <button>3</button>
-                            <button>4</button>
-                            <button>5</button>
-                            <button>Next</button>
-                        </div>
-                     </footer>
+                    
                 </div>
                
             </div>

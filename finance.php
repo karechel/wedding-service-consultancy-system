@@ -1,31 +1,59 @@
 <?php
 include 'connection.php';
-$pdo = new PDO($dsn, $user, $password);
 
-$statement1 = $pdo->query('SELECT COUNT(*) FROM clients');
-$clientsCount = $statement1->fetchColumn();
-
-$statement2 = $pdo->query('SELECT COUNT(*) FROM vendors');
-$vendorsCount = $statement2->fetchColumn();
-
-$statement3 = $pdo->query('SELECT COUNT(*) FROM bookings');
-$bookingsCount = $statement3->fetchColumn();
-$rows = [];
 try {
+    // Create a new PDO instance
+    $pdo = new PDO($dsn, $user, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Count all clients
+    $statement1 = $pdo->query('SELECT COUNT(*) FROM clients');
+    $clientsCount = $statement1->fetchColumn();
+
+    // Count all vendors
+    $statement2 = $pdo->query('SELECT COUNT(*) FROM vendors');
+    $vendorsCount = $statement2->fetchColumn();
+
+    // Count all bookings
+    $statement3 = $pdo->query('SELECT COUNT(*) FROM bookings');
+    $bookingsCount = $statement3->fetchColumn();
+
+    // Count active vendors
+    $vendor_sql = "SELECT COUNT(*) AS vendor_count FROM users WHERE role = 'Vendor' AND (status = '' OR status IS NULL)";
+    $vendor_stmt = $pdo->query($vendor_sql);
+    $vendor_result = $vendor_stmt->fetch(PDO::FETCH_ASSOC);
+    $vendor_count = $vendor_result['vendor_count'];
+
+    // Count active clients where status is empty or NULL
+    $client_sql = "SELECT COUNT(*) AS client_count FROM users WHERE role = 'Client' AND (status = '' OR status IS NULL)";
+    $client_stmt = $pdo->query($client_sql);
+    $client_result = $client_stmt->fetch(PDO::FETCH_ASSOC);
+    $client_count = $client_result['client_count'];
+
+    $active_subscriptions_count = $client_count + $vendor_count;
     // SQL query to select data from the tables
-    $sql = "SELECT bookings.booking_id, clients.first_name, clients.last_name, vendors.vendor_name, services.service_name, bookings.booking_date, bookings.status, bookings.payment_status, bookings.event_date
-            FROM bookings
-            JOIN clients ON bookings.client_id = clients.client_id
-            JOIN services ON bookings.service_id = services.service_id
-            JOIN vendors ON bookings.vendor_id = vendors.vendor_id";
+    $sql = "SELECT vendors.vendor_name, transactions.booking_id, clients.first_name,clients.last_name, transactions.transaction_date, transactions.amount,transactions.status
+            FROM transactions
+            JOIN vendors ON transactions.vendor_id= vendors.vendor_id
+            JOIN clients ON transactions.client_id=clients.client_id";
 
     // Execute query
     $stmt = $pdo->query($sql);
 
     // Fetch all rows as associative array
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
 
-} catch (PDOException $e) {
+    $stmt = $pdo->prepare("SELECT SUM(amount) AS total_amount FROM transactions");
+
+    // Execute the statement
+    $stmt->execute();
+
+    // Fetch the result
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  
+   } catch (PDOException $e) {
     // Handle errors gracefully
     echo "Error: " . $e->getMessage();
 }
@@ -400,7 +428,7 @@ try {
 }
 .dashboard-container {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-rows: auto auto 1fr;
     gap: 1rem;
     width: 1000px;
@@ -408,22 +436,7 @@ try {
         </style>
     </head>
     <body>
-        <header class="header">
-            <nav class="navbar">
-                <img src="Images/logo.jpg" width="80" height="60">
-                <a href="#"><i class='bx bx-bell'></i></a>
-                <a href=""><i class='bx bx-message'></i></a>
-                <div class="dropdown-container">
-    <button class="dropdown-btn"><i class='bx bx-user-circle'></i></button>
-    <div class="dropdown-menu">
-        <a href="#"><i class='bx bx-user-circle'></i> Profile</a>
-        <a href="#"><i class='bx bx-cog bx-flip-horizontal' ></i> Settings</a>
-        <div class="divider"></div>
-        <a href="#"><i class='bx bx-exit bx-flip-horizontal' ></i> Sign Out</a>
-    </div>
-</div>
-            </nav>
-        </header>
+    <?php include 'resuableComponents\managerHeader.php' ?>
             <div class="container">
             <!-- <h1 class="page-title">My Dashboard</h1> -->
             <div class="container-content">
@@ -443,7 +456,7 @@ try {
                 <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="vendorsM.php">Vendors</a></li>
                 <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="clientM.php">Clients</a></li>
                 <li><div class="dash-icon"><i class='bx bx-wallet-alt' ></i></div><a href="finance.php">Finance</a></li>
-                <li><div class="dash-icon"><i class='bx bxs-report' ></i></div><a href="#">Reports</a></li>
+               
             </ul>
            <!-- <button><a href="#">Logout</a></button> -->
             </div>
@@ -457,13 +470,13 @@ try {
                 <div class="card total1">
                     <div class="info">
                       <div class="info-detail">
-                      <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
+                      <!-- <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i> -->
                 <div class="options">
                     <a href="#">Yesterday</a>
                     <a href="#">2 days ago</a>
                     <a href="#">3 days ago</a>
                 </div>
-                      <h2><?php echo $clientsCount; ?> </h2>
+                      <h2>Ksh <?php echo $result['total_amount']; ?> </h2>
                         <h3>Gross Revenue</h3>
                       </div>
 
@@ -472,14 +485,14 @@ try {
                 <div class="card total2">
                     <div class="info">
                         <div class="info-detail">
-                        <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
+                        <!-- <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i> -->
                 <div class="options">
                     <a href="#">Yesterday</a>
                     <a href="#">2 days ago</a>
                     <a href="#">3 days ago</a>
                 </div>
-                        <h2><?php echo $vendorsCount; ?> </h2>
-                          <h3>Net Revenue</h3>
+                        <h2><?php echo $client_count; ?> </h2>
+                          <h3>Active clients</h3>
                         </div>
 
                       </div>
@@ -487,48 +500,20 @@ try {
                 <div class="card total3">
                     <div class="info">
                         <div class="info-detail">
-                        <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
+                        <!-- <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i> -->
                 <div class="options">
                     <a href="#">Yesterday</a>
                     <a href="#">2 days ago</a>
                     <a href="#">3 days ago</a>
                 </div>
-                        <h2><?php echo $bookingsCount; ?> </h2>
-                          <h3>Paid Subsciptions</h3>
+                        <h2><?php echo htmlspecialchars($vendor_count); ?></h2>
+                          <h3>Active Vendors</h3>
                         </div>
 
                       </div>
                 </div>
-                <div class="card total4">
-                    <div class="info">
-                      <div class="info-detail">
-                      <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
-                <div class="options">
-                    <a href="#">Yesterday</a>
-                    <a href="#">2 days ago</a>
-                    <a href="#">3 days ago</a>
-                </div>
-                      <h2><?php echo $clientsCount; ?> </h2>
-                        <h3>Pending Subscription Payments</h3>
-                      </div>
-
-                    </div>
-                </div>
-                <div class="card total5">
-                    <div class="info">
-                        <div class="info-detail">
-                        <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
-                <div class="options">
-                    <a href="#">Yesterday</a>
-                    <a href="#">2 days ago</a>
-                    <a href="#">3 days ago</a>
-                </div>
-                        <h2><?php echo $vendorsCount; ?> </h2>
-                          <h3>Overdue Subscription Payments</h3>
-                        </div>
-
-                      </div>
-                </div>
+             
+         
                 <!-- card bottom -->
 
             </div>
@@ -559,14 +544,14 @@ try {
                     <div class="info">
                       <div class="info-detail">
 
-                      <h2><?php echo $clientsCount; ?> </h2>
+                      <h2><?php echo htmlspecialchars($active_subscriptions_count); ?></h2>
                         <h3>Active Subscriptions</h3>
-                        <h4> Total Revenue:  </h4>  
+                         
                     </div>
 
                     </div>
                 </div>
-                <div class="card total2">
+                <!-- <div class="card total2">
                     <div class="info">
                         <div class="info-detail">
 
@@ -576,7 +561,7 @@ try {
                         </div>
 
                       </div>
-                </div>                     
+                </div>                      -->
                         </div>
                     </div>
                     <!-- end of booking details summaries -->
@@ -586,29 +571,27 @@ try {
                 <div class="card detail">
                                  <table>
                          <thead>
-                         <h2>Revenue Breakdown by Vendor</h2> 
+                         <h2>Transaction History</h2> 
                         <tr>                      
-                            <th>Vendor Name</th>
-                            <th>Monthly Fee</th>
-                            <th>Total Payments Received</th>
-                            <th>Pending Payments</th>
-                            <th>Cumulative Revenue</th>
-                            <th>Action</th>
+                            <th>Booking ID</th>
+                            <th>Client  Name</th>
+                            <th>Vendor  Name</th>
+                            <th>Amount</th>
+                            <th>Transaction  Date</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
         <?php foreach ($rows as $row): ?>
-            <tr>                         
+            <tr> 
+            <td>BK00<?php echo $row['booking_id']; ?></td>                        
+                <td><?php echo $row['first_name'] .' '. $row['last_name']; ?></td>
                 <td><?php echo $row['vendor_name']; ?></td>
-                <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
-                <td><?php echo $row['booking_date']; ?></td>
-                <td><?php echo $row['event_date']; ?></td>
-                <td><?php echo $row['service_name']; ?></td>
-                <td>
-                <i class="material-symbols-outlined">visibility</i>
-        <span class="material-symbols-outlined">edit</span>
-                    <span class="material-symbols-outlined">delete</span>
-                </td>
+                <td><?php echo $row['amount']; ?></td>
+                <td><?php echo $row['transaction_date']; ?></td>
+                <td><?php echo $row['status']; ?></td>
+                
+              
             </tr>
         <?php endforeach; ?>
     </tbody>

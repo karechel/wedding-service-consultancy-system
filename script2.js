@@ -1,87 +1,103 @@
-//revenue line graph
-const lineCanvasRevenue = document.getElementById('lineChartRevenue');
-const lineCtxRevenue = lineCanvasRevenue.getContext('2d');
+function filterLineGraphDataRevenue(filter) {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                const responseText = xhr.responseText;
 
-const lineRevenueData = {
-    monthly: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        data: [1200, 1900, 3000, 5000, 2400, 3500, 4500, 3200, 4300, 5100, 6300, 7000]
-    },
-    quarterly: {
-        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-        data: [6100, 10900, 12000, 18400]
-    },
-    yearly: {
-        labels: ['2019', '2020', '2021', '2022', '2023'],
-        data: [50000, 75000, 85000, 92000, 110000]
-    }
-};
+                // Extract numeric values from responseText
+                const numericValues = [];
+                const matches = responseText.match(/\d+/g); // Match all numeric values
 
-let currentLineDataRevenue = lineRevenueData.monthly;
+                if (matches) {
+                    for (let i = 0; i < matches.length; i++) {
+                        numericValues.push(Number(matches[i]));
+                    }
 
-function drawLineChartRevenue(data) {
-    const maxValue = Math.max(...data.data);
-    const minValue = Math.min(...data.data);
-    const padding = 50;
-    const xStep = (lineCanvasRevenue.width - 2 * padding) / (data.labels.length - 1);
-    const yStep = (lineCanvasRevenue.height - 2 * padding) / (maxValue - minValue);
+                    console.log(responseText); // Log the extracted numeric values to check
 
-    lineCtxRevenue.clearRect(0, 0, lineCanvasRevenue.width, lineCanvasRevenue.height);
-    lineCtxRevenue.beginPath();
-    lineCtxRevenue.moveTo(padding, lineCanvasRevenue.height - padding - (data.data[0] - minValue) * yStep);
+                    // Set labels based on filter
+                    let labels;
+                    if (filter === 'monthly') {
+                        labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    } else if (filter === 'quarterly') {
+                        labels = ['Q1', 'Q2', 'Q3', 'Q4'];
+                    } else if (filter === 'yearly') {
+                        labels = ['2020', '2021', '2022', '2023', '2024'];
+                    }
 
-    data.data.forEach((point, index) => {
-        const x = padding + index * xStep;
-        const y = lineCanvasRevenue.height - padding - (point - minValue) * yStep;
-        lineCtxRevenue.lineTo(x, y);
-    });
+                    // Pass labels and numericValues to drawLineChart function
+                    drawLineChart(labels, numericValues);
+                } else {
+                    console.error('No numeric values found in response');
+                }
+            } else {
+                console.error('Error:', xhr.statusText);
+                // Handle error here, e.g., display an error message on the page
+            }
+        }
+    };
 
-    lineCtxRevenue.strokeStyle = 'rgba(75, 192, 192, 1)';
-    lineCtxRevenue.lineWidth = 2;
-    lineCtxRevenue.stroke();
-    lineCtxRevenue.closePath();
-
-    lineCtxRevenue.fillStyle = '#000';
-    lineCtxRevenue.font = '12px Arial';
-    lineCtxRevenue.textAlign = 'center';
-
-    const yInterval = Math.ceil((maxValue - minValue) / 5);
-    for (let i = minValue; i <= maxValue; i += yInterval) {
-        const y = lineCanvasRevenue.height - padding - (i - minValue) * yStep;
-        lineCtxRevenue.fillText(i.toString(), padding - 30, y);
-    }
-
-    data.labels.forEach((label, index) => {
-        const x = padding + index * xStep;
-        const y = lineCanvasRevenue.height - padding;
-        lineCtxRevenue.fillText(label, x, y + 20);
-    });
+    xhr.open('GET', 'financeV.php?filter=' + filter, true);
+    xhr.send();
 }
 
-function filterLineGraphDataRevenue(period) {
-    if (period === 'monthly') {
-        currentLineDataRevenue = lineRevenueData.monthly;
-        document.getElementById('monthlyButtonRevenue').classList.add('active');
-        document.getElementById('quarterlyButtonRevenue').classList.remove('active');
-        document.getElementById('yearlyButtonRevenue').classList.remove('active');
-    } else if (period === 'quarterly') {
-        currentLineDataRevenue = lineRevenueData.quarterly;
-        document.getElementById('monthlyButtonRevenue').classList.remove('active');
-        document.getElementById('quarterlyButtonRevenue').classList.add('active');
-        document.getElementById('yearlyButtonRevenue').classList.remove('active');
-    } else if (period === 'yearly') {
-        currentLineDataRevenue = lineRevenueData.yearly;
-        document.getElementById('monthlyButtonRevenue').classList.remove('active');
-        document.getElementById('quarterlyButtonRevenue').classList.remove('active');
-        document.getElementById('yearlyButtonRevenue').classList.add('active');
+function drawLineChart(labels, data) {
+    const canvas = document.getElementById('lineChartRevenue');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const maxValue = Math.max(...data);
+
+    // Calculate canvas width based on labels length
+    const labelWidth = 30;
+    const minimumCanvasWidth = 400;
+    const canvasWidth = Math.max(minimumCanvasWidth, labels.length * labelWidth);
+    const canvasHeight = 400;
+
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+
+    const scaleY = canvas.height / (maxValue + 50);
+
+    // Draw X and Y axis
+    ctx.beginPath();
+    ctx.moveTo(30, 10);
+    ctx.lineTo(30, canvas.height - 30);
+    ctx.lineTo(canvas.width - 10, canvas.height - 30);
+    ctx.stroke();
+
+    // Draw data points and lines
+    ctx.beginPath();
+    ctx.moveTo(30, canvas.height - 30 - data[0] * scaleY);
+
+    for (let i = 1; i < data.length; i++) {
+        const x = 30 + i * labelWidth;
+        const y = canvas.height - 30 - data[i] * scaleY;
+        ctx.lineTo(x, y);
     }
-    drawLineChartRevenue(currentLineDataRevenue);
+
+    ctx.strokeStyle = '#3e95cd';
+    ctx.stroke();
+
+    // Draw X axis labels
+    ctx.font = '12px Arial';
+    ctx.fillStyle = '#000';
+    for (let i = 0; i < labels.length; i++) {
+        const x = 25 + i * labelWidth;
+        ctx.fillText(labels[i], x, canvas.height - 10);
+    }
+
+    // Draw Y axis labels
+    ctx.textAlign = 'right';
+    ctx.fillText(maxValue, 20, 20);
+    ctx.fillText('0', 20, canvas.height - 20);
+
+    // Draw title
+    ctx.textAlign = 'center';
+    ctx.font = '14px Arial';
+    ctx.fillText('Revenue', canvas.width / 2, 20);
 }
-
-// Initial rendering for monthly data
-filterLineGraphDataRevenue('monthly');
-
-
 
 
 //expense line graph

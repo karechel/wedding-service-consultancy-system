@@ -408,22 +408,7 @@ echo "Error: " . $e->getMessage();
         </style>
     </head>
     <body>
-        <header class="header">
-            <nav class="navbar">
-                <img src="Images/logo.jpg" width="80" height="60">
-                <a href="#"><i class='bx bx-bell'></i></a>
-                <a href=""><i class='bx bx-message'></i></a>
-                <div class="dropdown-container">
-    <button class="dropdown-btn"><i class='bx bx-user-circle'></i></button>
-    <div class="dropdown-menu">
-        <a href="#"><i class='bx bx-user-circle'></i> Profile</a>
-        <a href="#"><i class='bx bx-cog bx-flip-horizontal' ></i> Settings</a>
-        <div class="divider"></div>
-        <a href="logout.php"><i class='bx bx-exit bx-flip-horizontal'></i> Sign Out</a>
-    </div>
-</div>
-            </nav>
-        </header>
+    <?php include 'resuableComponents\managerHeader.php' ?>
             <div class="container">
             <!-- <h1 class="page-title">My Dashboard</h1> -->
             <div class="container-content">
@@ -445,7 +430,7 @@ echo "Error: " . $e->getMessage();
                 <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="vendorsM.php">Vendors</a></li>
                 <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="clientM.php">Clients</a></li>
                 <li><div class="dash-icon"><i class='bx bx-wallet-alt' ></i></div><a href="finance.php">Finance</a></li>
-                <li><div class="dash-icon"><i class='bx bxs-report' ></i></div><a href="#">Reports</a></li>
+               
             </ul>
            <!-- <button><a href="#">Logout</a></button> -->
             </div>
@@ -583,7 +568,7 @@ echo "Error: " . $e->getMessage();
     </div>
       
         </div>
-
+<!-- 
 <div class="overview">
         <div class="card total1">
                     <div class="info">
@@ -605,7 +590,7 @@ echo "Error: " . $e->getMessage();
                      
                     </div>
                 </div>
-        </div>
+        </div> -->
     </div>
 
             </div>

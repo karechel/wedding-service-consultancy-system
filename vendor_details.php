@@ -21,7 +21,7 @@
     
     try {
         // SQL query to select data from the tables
-        $sql = "SELECT vendors.vendor_name, vendors.category, vendors.location, vendor_services.rating, vendor_services.price, vendors.description, vendor_services.image, vendor_services.other_service_details, vendors.vendor_id
+        $sql = "SELECT vendors.vendor_name, vendors.category, vendors.location, vendor_services.rating, vendor_services.price, vendors.description, vendor_services.image, vendor_services.image1,vendor_services.image2, vendor_services.image3, vendor_services.image4, vendor_services.other_service_details, vendors.vendor_id
                 FROM vendor_services
                 JOIN vendors ON vendor_services.vendor_id = vendors.vendor_id
                 WHERE vendor_services.vendor_id = $vendor_id";
@@ -49,6 +49,7 @@
     }
     ?>
     <div class="vendor-content">
+    <button class="back-btn" type="button" onclick="goBack()"><i class='bx bx-arrow-back'></i> Back</button>
         <div class="gallery">
       
                 <?php
@@ -57,16 +58,25 @@
         ?>
 
   
-            <div class="sec-images">
-                <!-- <div class="sec_images_one"> -->
-                <img class="sec-image" src="Images/bg1.jpg" alt="Vendor Image 2">
-                <img class="sec-image" src="Images/bg1.jpg" alt="Vendor Image 3">
-                <!-- </div> -->
-                <!-- <div class="sec_images_two"> -->
-                <img class="sec-image" src="Images/bg1.jpg" alt="Vendor Image 4">
-                <img class="sec-image" src="Images/bg1.jpg" alt="Vendor Image 5">
-                <!-- </div> -->
+<div class="sec-images">
+                <?php if (!empty($vendorDetails['image1'])): ?>
+                    <?php $imageData1 = base64_encode(stream_get_contents($vendorDetails['image1'])); ?>
+                    <img class="sec-image" src="data:image/jpeg;base64,<?= $imageData1 ?>" alt="Uploaded Image">
+                <?php endif; ?>
+                <?php if (!empty($vendorDetails['image2'])): ?>
+                    <?php $imageData2 = base64_encode(stream_get_contents($vendorDetails['image2'])); ?>
+                    <img class="sec-image" src="data:image/jpeg;base64,<?= $imageData2 ?>" alt="Uploaded Image">
+                <?php endif; ?>
+                <?php if (!empty($vendorDetails['image3'])): ?>
+                    <?php $imageData3 = base64_encode(stream_get_contents($vendorDetails['image3'])); ?>
+                    <img class="sec-image" src="data:image/jpeg;base64,<?= $imageData3 ?>" alt="Uploaded Image">
+                <?php endif; ?>
+                <?php if (!empty($vendorDetails['image4'])): ?>
+                    <?php $imageData4 = base64_encode(stream_get_contents($vendorDetails['image4'])); ?>
+                    <img class="sec-image" src="data:image/jpeg;base64,<?= $imageData4 ?>" alt="Uploaded Image">
+                <?php endif; ?>
             </div>
+
         </div>
         <div class="all-details">
         <div class="category details"><?php echo $vendorDetails['category']; ?></div>
@@ -82,6 +92,32 @@
             <input type="hidden" name="vendor_id" value="<?php echo $vendorDetails['vendor_id']; ?>">
             <button type="submit"> Book Now</button>
             </form>
+            <form id="vendorForm"  method="GET">
+  <input type="hidden" id="vendor_id" name="vendor_id" value="<?php echo $vendorDetails['vendor_id']; ?>">
+  <button type="button" id="btnOpenMessageModal">Message Modal</button>
+</form>
+
+<!-- Modal -->
+<div id="messageModal" class="messageModal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Chat with Vendor</h2>
+    <div id="messageHistory" class="message-history">
+      <!-- Display message history here -->
+    </div>
+    <form id="messageForm" action="insert_conversation.php" method="POST">
+      <!-- Hidden input to store vendor_id -->
+      <input type="hidden" id="modal_vendor_id" name="vendor_id" value="">
+      <!-- Hidden input to store client_id (will be set dynamically by PHP) -->
+      <input type="hidden" id="client_id" name="client_id" value="<?= $client_id ?? '' ?>">
+      <!-- Textarea for message input -->
+      <textarea id="messageInput" name="message" placeholder="Type your message..." ></textarea>
+      <!-- Submit button -->
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</div>
            <div class="bottom-details">
         <div class="details vendor_name">Vendor: <?php echo $vendorDetails['vendor_name']; ?></div>
         <div class="details">Location: <?php echo $vendorDetails['location']; ?></div>
@@ -139,5 +175,7 @@
         }
     </script> -->
     <script src="moreDetails.js"></script>
+    <script src="message.js"></script>
+    <script src="back.js"></script>
 </body>
 </html>

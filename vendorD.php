@@ -5,7 +5,7 @@ include 'login.php';
 // session_start(); // Start session to access session variables
 if (!isset($_SESSION['username'])) {
     // If not logged in, redirect to the login page
-    header("Location: login.html");
+    header("Location: index.html");
     exit();
 }
 $vendor_name = '';
@@ -49,6 +49,31 @@ try {
 
         // Fetch all rows as associative array
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+        $bookingsSql = "SELECT COUNT(*) AS total_bookings FROM bookings WHERE vendor_id = (SELECT vendor_id FROM vendors WHERE user_id = :user_id)";
+        $bookingsStmt = $pdo->prepare($bookingsSql);
+        $bookingsStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $bookingsStmt->execute();
+        $bookingsData = $bookingsStmt->fetch(PDO::FETCH_ASSOC);
+        $total_bookings = $bookingsData['total_bookings'];
+    
+        // Fetch the number of pending payments
+        $pendingPaymentsSql = "SELECT COUNT(*) AS pending_payments FROM bookings WHERE vendor_id = (SELECT vendor_id FROM vendors WHERE user_id = :user_id) AND payment_status = 'unpaid'";
+        $pendingPaymentsStmt = $pdo->prepare($pendingPaymentsSql);
+        $pendingPaymentsStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $pendingPaymentsStmt->execute();
+        $pendingPaymentsData = $pendingPaymentsStmt->fetch(PDO::FETCH_ASSOC);
+        $pending_payments = $pendingPaymentsData['pending_payments'];
+    
+        // Fetch the total revenue
+        $revenueSql = "SELECT SUM(amount) AS total_revenue FROM transactions WHERE vendor_id = (SELECT vendor_id FROM vendors WHERE user_id = :user_id)";
+        $revenueStmt = $pdo->prepare($revenueSql);
+        $revenueStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $revenueStmt->execute();
+        $revenueData = $revenueStmt->fetch(PDO::FETCH_ASSOC);
+        $total_revenue = $revenueData['total_revenue'];
     } else {
         // Handle case where user is not logged in
         echo "You must be logged in to view this page.";
@@ -366,7 +391,7 @@ try {
             
         }
         .navbar a{
-            left: 87%;
+            left: 79%;
             font-size: 1.3rem;
         }
         .navbar img{
@@ -409,57 +434,18 @@ try {
             background-color: #ccc;
             margin: 8px 0;
         }
-        .navbar .dropdown-container{
-            left: 87%;
-        }
-        .dropdown-container a{
+                .dropdown-container a{
             position:static ;
             font-size: 1rem;
         }
         </style>
     </head>
     <body>
-        <header class="header">
-            <nav class="navbar">
-                <img src="Images/logo.jpg" width="80" height="60">
-                <a href="#"><i class='bx bx-bell'></i></a>
-                <a href=""><i class='bx bx-message'></i></a>
-                <div class="dropdown-container">
-    <button class="dropdown-btn"><i class='bx bx-user-circle'></i></button>
-    <div class="dropdown-menu">
-        <a href="#"><i class='bx bx-user-circle'></i> Profile</a>
-        <a href="#"><i class='bx bx-cog bx-flip-horizontal' ></i> Settings</a>
-        <div class="divider"></div>
-        <a href="logout.php"><i class='bx bx-exit bx-flip-horizontal'></i> Sign Out</a>
-    </div>
-</div>
-            </nav>
-        </header>
+       <?php include 'resuableComponents\vendorHeader.php' ?>
             <div class="container">
             <!-- <h1 class="page-title">My Dashboard</h1> -->
             <div class="container-content">
-         <div class="dashboard-sidebar">
-
-            <div class="user-image">
-            <img src="Images/pp.jpeg" alt="">
-            <h3>
-            <?php echo htmlspecialchars($vendor_name); ?>  </span>
-                <span>Vendor</span>
-            </h3>
-            </div>
-            <div class="dashboard-menu">
-                <ul>
-               <li><div class="dash-icon"><i class='bx bxs-dashboard'></i></div><a class="active" href="vendorD.php">Dashboard</a></li>
-                <li> <div class="dash-icon"><i class='bx bxs-bookmark-heart'></i></div><a href="BookingList.php">Bookings</a></li>
-                <li> <div class="dash-icon"><i class='bx bxs-bookmark-heart'></i></div><a href="BookingList.php">Services</a></li>
-                <li><div class="dash-icon"><i class='bx bx-user'></i></div><a href="clientV.php">Clients</a></li>
-                <li><div class="dash-icon"><i class='bx bx-wallet-alt' ></i></div><a href="finance.php">Finance</a></li>
-                <li><div class="dash-icon"><i class='bx bxs-report' ></i></div><a href="#">Reports</a></li>
-            </ul>
-           <!-- <button><a href="#">Logout</a></button> -->
-            </div>
-
-        </div>
+       <?php include 'vendor_menu.php'; ?>
 
         <div class="main-content">
         <div class="dashboard-container">
@@ -467,14 +453,9 @@ try {
     <div class="card total1">
         <div class="info">
             <div class="info-detail">
-                <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
-                <div class="options">
-                    <a href="#" onclick="filterContent('0', 'bookings')">Today</a>
-                    <a href="#" onclick="filterContent('1', 'bookings')">Yesterday</a>
-                    <a href="#" onclick="filterContent('2', 'bookings')">2 days ago</a>
-                    <a href="#" onclick="filterContent('3', 'bookings')">3 days ago</a>
-                </div>
-                <h2><span id="totalBookings"></span></h2>
+             
+             
+                <h2><span id="totalBookings"><?php echo $total_bookings ?></span></h2>
                 <h3>Total Bookings</h3>
                 <!-- <h4>New clients: <span id="newClients"></span></h4> -->
             </div>
@@ -485,14 +466,9 @@ try {
     <div class="card total2">
         <div class="info">
             <div class="info-detail">
-                <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
-                <div class="options">
-                    <a href="#" onclick="filterContent('0', 'payments')">Today</a>
-                    <a href="#" onclick="filterContent('1', 'payments')">Yesterday</a>
-                    <a href="#" onclick="filterContent('2', 'payments')">2 days ago</a>
-                    <a href="#" onclick="filterContent('3', 'payments')">3 days ago</a>
-                </div>
-                <h2><span id="totalVendors"></span></h2>
+         
+            
+                <h2><span id="totalVendors"><?php echo $pending_payments ?></span></h2>
                 <h3>Pending Payments</h3>
                 <!-- <h4>New vendors: <span id="newVendors"></span></h4> -->
             </div>
@@ -503,14 +479,9 @@ try {
     <div class="card total3">
         <div class="info">
             <div class="info-detail">
-                <i class='bx bx-dots-vertical-rounded' onclick="toggleOptions(event)"></i>
-                <div class="options">
-                    <a href="#" onclick="filterContent('0', 'revenue')">Today</a>
-                    <a href="#" onclick="filterContent('1', 'revenue')">Yesterday</a>
-                    <a href="#" onclick="filterContent('2', 'revenue')">2 days ago</a>
-                    <a href="#" onclick="filterContent('3', 'revenue')">3 days ago</a>
-                </div>
-                <h2><span id=""></span></h2>
+               
+           
+                <h2><span id=""></span>Kes <?php echo $total_revenue ?></h2>
                 <h3>Total Revenue</h3>
                 <!-- <h4>New bookings: <span id="newBookings"></span></h4> -->
             </div>
@@ -554,6 +525,10 @@ try {
 
         </div>
     </div>
+    <!-- message modal -->
+
+
+
     <script>
     document.querySelector('.dropdown-btn').addEventListener('click', function() {
         const dropdownMenu = document.querySelector('.dropdown-menu');
@@ -576,8 +551,9 @@ try {
    <!--scripts-->
    <!--apexCharts-->
    <script src="chart.js"></script>
-   <script src="vendorFilter.js"></script>
+   <!-- <script src="vendorFilter.js"></script> -->
    <script src="script3.js"></script>
    <!-- <script src="charts.js"></script> -->
+    <!-- <script src="received_msg.js"></script> -->
  </body>
 </html>

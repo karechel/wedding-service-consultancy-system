@@ -9,12 +9,18 @@ try {
         $user_id = $_SESSION['user_id'];
 
         // SQL query to select data from the tables filtered by the logged-in user
-        $sql = "SELECT bookings.booking_id, clients.first_name, clients.last_name, vendors.vendor_name, services.service_name, bookings.booking_date, bookings.status, bookings.payment_status, bookings.event_date
-                FROM bookings
-                JOIN clients ON bookings.client_id = clients.client_id
-                JOIN services ON bookings.service_id = services.service_id
-                JOIN vendors ON bookings.vendor_id = vendors.vendor_id
-                WHERE clients.user_id = :user_id";
+        $sql = "SELECT b.booking_id, c.first_name, c.last_name, v.vendor_name, s.service_name, 
+        b.booking_date, b.status, b.payment_status, b.event_date,
+        SUM(vs.price) as total_price
+ FROM bookings b
+ JOIN clients c ON b.client_id = c.client_id
+ JOIN services s ON b.service_id = s.service_id
+ JOIN vendors v ON b.vendor_id = v.vendor_id
+ JOIN vendor_services vs ON b.vendor_id = vs.vendor_id
+ WHERE c.user_id = :user_id
+ GROUP BY b.booking_id, c.first_name, c.last_name, v.vendor_name, s.service_name,
+          b.booking_date, b.status, b.payment_status, b.event_date";
+
 
         // Prepare and execute query
         $stmt = $pdo->prepare($sql);
@@ -23,6 +29,17 @@ try {
 
         // Fetch all rows as associative array
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      
+// Assuming $total_price contains the fetched price
+
+if (!empty($rows) && isset($rows[0]['total_price'])) {
+    $total_price = $rows[0]['total_price'];
+    $formatted_price = number_format($total_price, 0, '.', '');
+} else {
+    $formatted_price = 0; // Default value if no price is found
+}
+
     } else {
         // Handle case where user is not logged in
         // Redirect or handle as per your application's logic
@@ -33,6 +50,7 @@ try {
     echo "Error: " . $e->getMessage();
 }
 ?>
+
 
 <html lang="en">
     <head>
@@ -250,21 +268,63 @@ button:hover {
             <tbody>
         <?php foreach ($rows as $row): ?>
             <tr data-booking-id="<?php echo $row['booking_id']; ?>" data-status="<?php echo $row['status']; ?>">
-                <td><?php echo $row['booking_id']; ?></td>
+                <td>BK00<?php echo $row['booking_id']; ?></td>
                 <td><?php echo $row['booking_date']; ?></td>
                 <td><?php echo $row['event_date']; ?></td>
                 <td><?php echo $row['service_name']; ?></td>
                 <td><?php echo $row['vendor_name']; ?></td>
-                <td><?php echo $row['status']; ?></td>
-                <td><span class="status fullfilled"><?php echo $row['payment_status']; ?></span></td>
                 <td>
+                <?php if ($row['status'] == 'Confirmed'): ?>
+                    <span class="status fullfilled"><?php echo $row['status']; ?></span>
+                <?php elseif ($row['status'] == 'Pending'): ?>
+                    <span class="status onprogress"><?php echo $row['status']; ?></span>
+                <?php else: ?>
+                    <span class="status confirmed"><?php echo $row['status']; ?></span>
+                    <?php endif; ?>
+            </td> 
+                <td>
+                        <?php if ($row['payment_status'] == 'Unpaid'): ?>
+                            <button class="status pay-button" data-booking-id="<?php echo $row['booking_id']; ?>">Pay Now</button>
+                        <?php elseif ($row['payment_status'] == 'Paid'): ?>
+                            <span class="status fullfilled"><?php echo $row['payment_status']; ?></span>
+                        <?php endif; ?>
+                    </td>
+                <td>
+                <?php if ($row['status'] == 'Confirmed'): ?>
                     <span class="material-symbols-outlined edit">edit</span>
+                <?php elseif ($row['status'] == 'Pending'): ?>
                     <span class="material-symbols-outlined delete">delete</span>
+                <?php else: ?>
+                    <span class="material-symbols-outlined done_all">done_all</span>  
+                <?php endif; ?>
+                   
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
         </table>
+        <!-- payment Modal -->
+     
+        <div id="payModal" class="modal-payment">
+    <div class="modal-content-payment">
+        <span class="close-payment">&times;</span>
+        <h2>Pay for Booking</h2>
+        <form id="payForm" action="stk_push.php" method="POST">
+            <!-- Displaying booking details -->
+            <input type="hidden" id="booking_id" name="booking_id">
+            <label for="contactNumber">Contact Number:</label>
+            <input type="text" id="contactNumber" placeholder="E.g 254700000000" name="contactNumber" required>
+            <label for="amount">Amount: <?php echo $formatted_price; ?></label>
+            <input type="hidden" id="amount" name="amount" value="<?php echo $formatted_price; ?>">
+              
+            <button type="submit">Pay</button>
+        </form>
+    </div>
+</div>
+
+
+
+
 
 <!-- Edit Popup Modal -->
 <div id="editModal" class="modal">
@@ -284,93 +344,24 @@ button:hover {
                
             </div>
         </main>
-        <!-- <script>
-            document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById("editModal");
-    const span = document.getElementsByClassName("close")[0];
-
-    document.querySelectorAll('.delete').forEach(button => {
-        button.addEventListener('click', function () {
-            const bookingId = this.closest('tr').dataset.bookingId;
-
-            if (confirm('Are you sure you want to delete this booking?')) {
-                fetch('delete_booking.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ booking_id: bookingId })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        this.closest('tr').remove(); // Remove the deleted row from the DOM
-                    } else {
-                        alert('Error deleting booking: ' + data.message);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        });
-    });
-
-    document.querySelectorAll('.edit').forEach(button => {
-        button.addEventListener('click', function () {
-            const bookingId = this.closest('tr').dataset.bookingId;
-            const status = this.closest('tr').querySelector('td:nth-child(7)').innerText;
-            const paymentStatus = this.closest('tr').querySelector('td:nth-child(8) .status').innerText;
-
-            document.getElementById('editBookingId').value = bookingId;
-            document.getElementById('editStatus').value = status;
-            document.getElementById('editPaymentStatus').value = paymentStatus;
-
-            modal.style.display = "block";
-        });
-    });
-
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    document.getElementById('editForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const formData = new FormData(this);
-
-        fetch('update_booking.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                const bookingId = formData.get('booking_id');
-                const status = formData.get('status');
-                const paymentStatus = formData.get('payment_status');
-
-                const row = document.querySelector(`tr[data-booking-id='${bookingId}']`);
-                row.querySelector('td:nth-child(7)').innerText = status;
-                row.querySelector('td:nth-child(8) .status').innerText = paymentStatus;
-
-                modal.style.display = "none";
-            } else {
-                alert('Error updating booking: ' + data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-});
-
-     
-    </script> -->
+     <script src="stk_push.js"></script>
      <script src="editDelete.js"></script>
     <script src="resuableComponents\filterbookings.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var payButtons = document.querySelectorAll('.pay-button');
+        var modalBookingIdField = document.getElementById('booking_id');
+        
+        payButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var bookingId = this.getAttribute('data-booking-id');
+                modalBookingIdField.value = bookingId;
+                // Optionally, you can also populate other fields in the modal if needed
+            });
+        });
+    });
+</script>
+
     </div>
     
 </html>

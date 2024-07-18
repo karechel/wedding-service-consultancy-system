@@ -146,7 +146,7 @@ try {
                     <?php if ($daysToGo !== null): ?>
                     <h1><?php echo $daysToGo; ?> Days to Go!!</h1>
                     <?php endif; ?>
-
+                            <img src="Images/wedding.svg" alt="">
                 </div>
                 <!-- <div class="row">
                 <div class="progress-blocks">

@@ -2,8 +2,7 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Poppins,sans-serif';
-    outline: none;
+    font-family: sans-serif;
 
 }
 /* body{
@@ -28,13 +27,14 @@
 } */
 .navbar a{
     position: relative;
-    font-size: 16px;
-    color: #000;
+    font-size: 17px;
+    color: #6a6767;
     text-decoration: none;
     font-weight: 500;
     margin-right: 30px;
+    font-family: sans-serif;
 }
-.navbar a::after{
+/* .navbar a::after{
     content: '';
     position: absolute;
     left: 0;
@@ -46,12 +46,16 @@
     transform: translateY(10px);
     opacity: 0;
     transition: 0.5s;
-}
-.navbar a:hover::after{
+} */
+/* .navbar a:hover::after{
     transform: translateY(0px);
     opacity: 1;
-}
+} */
 
+.navbar a.active {
+    color: #994532;
+    font-weight: 700;
+}
 .dashboard-sidebar{
 
    display: flex;
@@ -606,11 +610,13 @@ main{
 
 }
 .detail table tr:nth-child(odd){
-    background-color: #f8f8fb;
+    background-color: #caa69e1a;
+    /* background-color: #f8f8fb; */
 
 }
 .detail table th{
-    background-color: #f4f4fb;
+    background-color: #caa69e1a;
+    /* background-color: #f4f4fb; */
 }
 .detail table th, 
 .detail table td {
@@ -623,7 +629,9 @@ main{
 
 .detail table tr:hover{
     background-color: #f2f2f2;
-    border-bottom: 2px solid #2d2b98;
+    border-bottom: 2px solid #e3bdb5;
+    /* background-color: #f2f2f2;
+    border-bottom: 2px solid #2d2b98; */
 }
 .detail table tr td:nth-child(2), .detail table tr td:nth-child(3){
     min-width: 150px;
@@ -646,6 +654,16 @@ main{
     .fullfilled{
         background-color: #dcedde;
         color: #37aa38;
+    }
+    .pay-button{
+        padding-right: 2.3rem;
+        background-color: rgb(254 237 237);
+        color: red;
+    }
+    .pay-button:hover{
+        padding-right: 2.3rem;
+        background-color:red;
+        color:  rgb(254 237 237);
     }
     @media screen and(max-width:980px) {
         .dashboard-container{
@@ -1102,12 +1120,26 @@ footer p{
 .right-section ul li a {
     text-decoration: none;
     color: black;
+    bottom: 8px;
 }
 .right-section{
     margin-left: 450px;
 }
+.right-section span{
+    margin-left: 40px;
+    bottom: 15px;
+    position: absolute;
+    width: 100px;
+}
 .right-section .bx{
     font-size :20px; 
+    color: #6a6767;
+    /* color: #e3bdb5; */
+     /* color: #c9b4c3; */
+}
+.right-section img{
+    width: 35px;
+    margin-left: 0;
 }
  .vendor-services *{
   
@@ -1161,6 +1193,7 @@ footer p{
     font-size: 1rem;
 }
 /* modal styling */
+/* Modal styles */
 .modal {
     display: none;
     position: fixed;
@@ -1172,28 +1205,32 @@ footer p{
     overflow: auto;
     background-color: rgb(0,0,0);
     background-color: rgba(0,0,0,0.4);
-    padding-top: 60px;
-    }
-    .modal-content {
+}
+
+.modal-content {
+    height: 250px;
     background-color: #fefefe;
-    margin: 5% auto;
+    margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 500px;
-    height: 500px;
-    }
-    .close {
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
-    }
-    .close:hover,
-    .close:focus {
+}
+
+.close:hover,
+.close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
-    }
+}
     .modal label{
         margin-top: 10px;
         font-size: 20px;
@@ -1209,8 +1246,8 @@ footer p{
         .modal button{
         height: 30px;
         width: 190px;
-        margin-top: 200px;
-        left: 140px;
+        margin-top: 50px;
+        left: 70px;
         position: relative;
         color: white;
         font-size: 20px;
@@ -1226,4 +1263,132 @@ footer p{
                 background:#e3bdb5 ;
                }
            
-        
+        .transaction-header{
+            display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+        }
+        .transaction-header .filterEntries{
+            margin-top: 0;
+        }
+        .transaction-header .detail table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+        }
+                /*msg  */
+                .received-message-modal {
+                    display: none;
+                    position: fixed;
+                    z-index: 1;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto;
+                    background-color: rgba(0,0,0,0.4);
+                  }
+                  
+                  .received-modal-content {
+                    background-color: #fefefe;
+                    margin: 15% auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    width: 80%;
+                    max-width: 600px;
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                    position: relative;
+                  }
+                  
+                  .close {
+                    color: #aaa;
+                    float: right;
+                    font-size: 28px;
+                    font-weight: bold;
+                  }
+                  
+                  .close:hover,
+                  .close:focus {
+                    color: black;
+                    text-decoration: none;
+                    cursor: pointer;
+                  }
+                  
+                  .received-messages-container {
+                    max-height: 300px;
+                    overflow-y: auto;
+                  }
+
+
+                  /* payment modal */
+                  .modal-payment {
+                    display: none;
+                    position: fixed;
+                    z-index: 1;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto;
+                    background-color: rgb(0,0,0);
+                    background-color: rgba(0,0,0,0.4);
+                }
+                
+                .modal-content-payment {
+                    height: 50%;
+                    background-color: #fefefe;
+                    margin: 15% auto;
+                    padding: 20px;
+                    border: 1px solid #888;
+                    width: 80%;
+                    max-width: 400px;
+                    text-align: center;
+                }
+                
+                .close-payment {
+                    color: #aaa;
+                    float: right;
+                    font-size: 28px;
+                    font-weight: bold;
+                }
+                
+                .close-payment:hover,
+                .close-payment:focus {
+                    color: black;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+                
+                .modal-content-payment h2 {
+                    margin-top: 0;
+                }
+                
+                #payForm label {
+                    display: block;
+                    margin-top: 10px;
+                }
+                
+                #payForm input[type="text"] {
+                    width: 100%;
+                    padding: 8px;
+                    margin-top: 5px;
+                    margin-bottom: 20px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
+                
+                #payForm button {
+                    height: 30px;
+                    width: 190px;
+                    margin-top: 50px;
+                    position: relative;
+                    color: white;
+                    font-size: 20px;
+                    background: #000;
+                    border: #000;
+                    font-family: sans-serif, emoji;
+                }
+                
+                #payForm button:hover {
+                    background-color:#e3bdb5 ;;
+                }

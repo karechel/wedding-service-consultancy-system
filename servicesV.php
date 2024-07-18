@@ -118,7 +118,7 @@ try {
     height: 4rem;
     }
         .navbar a{
-            left: 87%;
+            left: 79%;
             font-size: 1.3rem;
         }
         .navbar img{
@@ -193,7 +193,7 @@ try {
             margin: 8px 0;
         }
         .navbar .dropdown-container{
-            left: 87%;
+            left: 79%;
         }
         .dropdown-container a{
             position:static ;
@@ -203,22 +203,7 @@ try {
     </head>
     <body>
       
-       <header class="header">
-            <nav class="navbar">
-                <img src="Images/logo.jpg" width="80" height="60">
-                <a href="#"><i class='bx bx-bell'></i></a>
-                <a href=""><i class='bx bx-message'></i></a>
-                <div class="dropdown-container">
-            <button class="dropdown-btn"><i class='bx bx-user-circle'></i></button>
-             <div class="dropdown-menu">
-             <a href="#"><i class='bx bx-user-circle'></i> Profile</a>
-            <a href="#"><i class='bx bx-cog bx-flip-horizontal' ></i> Settings</a>
-             <div class="divider"></div>
-             <a href="logout.php"><i class='bx bx-exit bx-flip-horizontal'></i> Sign Out</a>
-         </div>
-        </div>
-            </nav>
-        </header>
+    <?php include 'resuableComponents\vendorHeader.php' ?>
             <!--sidebar--> 
             <input type="checkbox" id="toggle" >
             <label class="side-toggle" for="toggle"><span ><i class='bx bxs-dashboard' ></i></span></label>
@@ -240,11 +225,9 @@ try {
                     <span class="bx bx-user"></span><p> <a href="ClientV.php"> Clients</a></p>
                 </div>
                 <div class="sidebar-menu">
-                    <span class="bx bx-wallet-alt"></span><p><a href="finance.php">Finance</a></p>
+                    <span class="bx bx-wallet-alt"></span><p><a href="financev.php">Finance</a></p>
                 </div>
-                <div class="sidebar-menu">
-                    <span  class='bx bx-objects-horizontal-left' ></span><p>Reports</p>
-                </div>
+               
                
             </div>
             <!--Maindashboard--> 
@@ -265,22 +248,22 @@ try {
                                 </select> entries
                             </div> -->
                            
-                            <div class="filter">
+                            <!-- <div class="filter">
                                 
                                 <input type="search" name="" id="search" placeholder="Search bookings">
-                            </div>
+                            </div> -->
                         </div>
                         <div class="addBookingBtn">
-                            <button><a href="services.php"><span class="material-symbols-outlined">add</span>Add</a></button>
+                            <button  id="exportCSV"><span class="material-symbols-outlined">upgrade</span>Export</button>
                         </div> 
                         
                    
                      </div>
                      <!-- end of header section -->
-                     <table>
+                     <table id="servicesTable">
     <thead>
         <tr>
-            <th>service #</th>
+            <th>service</th>
             <th>Description</th>
             <th>Price</th>
             <th>rating</th>
@@ -295,7 +278,7 @@ try {
                 <td><?php echo $row['price']; ?></td>
                 <td><?php echo $row['rating']; ?></td>
                 <td>
-                    <i class="material-symbols-outlined view">visibility</i>
+                   
                     <span class="material-symbols-outlined edit">edit</span>
                     <span class="material-symbols-outlined delete">delete</span>
                 </td>
@@ -318,18 +301,7 @@ try {
         </form>
     </div>
 </div>
-                     <footer>
-                        <span>showing 1 of 10 of 50 entries</span>
-                        <div class="pagination">
-                            <button>prev</button>
-                            <button class="active" >1</button>
-                            <button>2</button>
-                            <button>3</button>
-                            <button>4</button>
-                            <button>5</button>
-                            <button>Next</button>
-                        </div>
-                     </footer>
+                    
                 </div>
                
             </div>
@@ -436,6 +408,7 @@ try {
         }
     }
         </script>
+         <script src="resuableComponents\exportCSV.js"></script>
     </body>
 </html>
 

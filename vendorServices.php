@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'connection.php'; // Ensure connection to the database
-
+include 'login.php';
 $rows = [];
 try {
     // SQL query to select data from the tables
@@ -42,11 +42,11 @@ try {
         margin-bottom: 50px;
 
     }
-    .service-content1 .row {
+    /* .service-content1 .row {
     display: flex;
     width: 100%;
     flex-direction: column;
-}
+} */
     .service-content1 .filter{
         width: 25%;
         /* background: #caa69e1a; */
@@ -65,7 +65,7 @@ try {
         width: 75%;
        position: sticky;
        left: 75%;
-       margin-top: 100px;
+       /* margin-top: 100px; */
     }
     .service-blocks {
     background: white;
@@ -119,6 +119,26 @@ try {
     cursor: pointer;
 
 }
+.services {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between; /* Distributes the blocks evenly */
+    width: 100%;
+}
+
+.service-blocks {
+    flex: 1 1 calc(33.333% - 10px); /* 3 blocks per row with a little margin */
+    /* margin: 5px; */
+    box-sizing: border-box;
+}
+
+
+
+
 </style>
     </head>
     <body >
@@ -163,64 +183,62 @@ try {
 </form>
                 </div>
                 <div class="services">
-                    <div class="row">
-                    <?php $count = 0; ?>
-                    <?php foreach ($rows as $row): ?>
-                        <?php if ($count % 3 == 0 && $count != 0): ?>
-                </div><div class="row">
-            <?php endif; ?>
-                    <div class="service-blocks">
-                        <div class="image">
+                <button class="back-btn" type="button" onclick="goBack()"><i class='bx bx-arrow-back'></i> Back</button>
+    <?php $count = 0; ?>
+    <?php foreach ($rows as $row): ?>
+        <?php if ($count % 3 == 0): ?>
+            <div class="row">
+        <?php endif; ?>
+                <div class="service-blocks">
+                    <div class="image">
                         <?php
-                    if ($row && !empty($row['image'])) {
-                        // Encode the image data as a base64 string
-                        $imageData = base64_encode(stream_get_contents($row['image']));
-                        echo '<img src="data:image/jpeg;base64,' . $imageData . '" alt="Uploaded Image" class="uploaded-image"> ';
-
-                    } else {
-                        echo "Image not found or empty.";
-                    }
-                     ?>
-                            <!-- <a href=""><img src="Images/venue.jpg" alt=""></a> -->
-                               <div class="vendor">
-                                <div class="author-image">
-                                    <a href=""><img src="Images/pp.jpeg" alt=""></a>
-                                    <p class="name"><?php echo $row['vendor_name']; ?></p>
-                                </div>
+                        if ($row && !empty($row['image'])) {
+                            // Encode the image data as a base64 string
+                            $imageData = base64_encode(stream_get_contents($row['image']));
+                            echo '<img src="data:image/jpeg;base64,' . $imageData . '" alt="Uploaded Image" class="uploaded-image">';
+                        } else {
+                            echo "Image not found or empty.";
+                        }
+                        ?>
+                        <div class="vendor">
+                            <div class="author-image">
+                                <p class="name"><?php echo $row['vendor_name']; ?></p>
                             </div>
-                            <div class="service-block" data-vendor-id="<?php echo $row['vendor_id']; ?>" data-service-id="<?php echo $row['vendor_service_id']; ?>">
-                                <i class="bx bx-heart" style="cursor: pointer;" onclick="toggleHeart(this)"></i>
-            </div>
+                        </div>
+                        <div class="service-block" data-vendor-id="<?php echo $row['vendor_id']; ?>" data-service-id="<?php echo $row['vendor_service_id']; ?>">
+                            <i class="bx bx-heart" style="cursor: pointer;" onclick="toggleHeart(this)"></i>
+                        </div>
                     </div>
                     <div class="details">
                         <div class="top-details">
                             <h3 class="category-title"><?php echo $row['service_name']; ?></h3>
-
                             <ul class="rating">
                                 <li>
-                                    <i class='bx bxs-star' style='color:#ddc04c'  ></i> <?php echo $row['rating']; ?>
+                                    <i class='bx bxs-star' style='color:#ddc04c'></i> <?php echo $row['rating']; ?>
                                     <p float-right><?php echo $row['location']; ?>, Kenya</p>
                                 </li>
-
-
-                            </div>
-                            <div class="bottom-details">
-                                <span>Price: Ksh <?php echo $row['price']; ?></span>
-                                <div class="block-buttons">
+                            </ul>
+                        </div>
+                        <div class="bottom-details">
+                            <span>Price: Ksh <?php echo $row['price']; ?></span>
+                            <div class="block-buttons">
                                 <button class="btn">
-                                 <a href="vendor_details.php?vendor_id=<?php echo $row['vendor_id']; ?>" style="text-decoration: none; color: inherit;">View More</a>
+                                    <a href="vendor_details.php?vendor_id=<?php echo $row['vendor_id']; ?>" style="text-decoration: none; color: inherit;">View More</a>
                                 </button>
-
-                                </div>
                             </div>
+                        </div>
                     </div>
-
-                    </div>
-                    <?php $count++; ?>
-                                      <?php endforeach; ?>
                 </div>
+        <?php $count++; ?>
+        <?php if ($count % 3 == 0): ?>
+            </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    <?php if ($count %3 != 0): ?>
+        </div>
+    <?php endif; ?>
+</div>
 
-                </div>
                 </div>
                 <!-- <footer class="footer">
                     <div class="footer-heading">
@@ -262,9 +280,8 @@ try {
           </div>
 
 
-        <script src="script.js">
-
-        </script>
+        <script src="script.js"></script>
+          <script src="back.js"></script>
     </div>
 </div>
     </body>

@@ -11,20 +11,19 @@ try {
         $user_id = $_SESSION['user_id'];
 
         // SQL query to select data from the tables filtered by the logged-in user
-        $sql = "SELECT bookings.booking_id, clients.first_name, clients.last_name, vendors.vendor_name, services.service_name, bookings.booking_date, bookings.status, bookings.payment_status, bookings.event_date
-                FROM bookings
-                JOIN clients ON bookings.client_id = clients.client_id
-                JOIN services ON bookings.service_id = services.service_id
-                JOIN vendors ON bookings.vendor_id = vendors.vendor_id
-                WHERE clients.user_id = :user_id";
+        $sql = "SELECT transactions.transaction_id, transactions.booking_id, services.service_name, transactions.amount, transactions.payment_method, transactions.transaction_date
+        FROM transactions
+        JOIN services ON transactions.service_id = services.service_id
+        JOIN clients ON transactions.client_id = clients.client_id
+        WHERE clients.user_id = :user_id";
 
-        // Prepare and execute query
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt->execute();
+// Prepare and execute query
+$stmt = $pdo->prepare($sql);
+$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
 
-        // Fetch all rows as associative array
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Fetch all rows as associative array
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } else {
         // Handle case where user is not logged in
        
@@ -217,17 +216,17 @@ try {
                
                 <div class="card detail">
                     <h2>My Transactions</h2>
-                     <div class="detail-header">
+                     <!-- <div class="detail-header">
                                            
                         <div class="filterEntries">
-                            <!-- <div class="entries">
+                            <div class="entries">
                                 Show <select name="" id="table_size">
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
                                 </select> entries
-                            </div> -->
+                            </div>
                             <div class="button-container">
                         <button id="" class="filter-button" >History</button>
                         <button id="" class="filter-button" >Outstanding</button>
@@ -242,13 +241,15 @@ try {
                         </div> 
                        
                    
-                     </div>
+                     </div> -->
                      <!-- end of header section -->
                      <table>
     <thead>
         <tr>
+            <th>Transaction #</th>
             <th>Service</th>
-            <th>Payment Date</th>
+            <th>Booking #</th>
+            <th>Transaction Date</th>
             <th>Amount</th>
             <th>Method</th>
         </tr>
@@ -256,10 +257,12 @@ try {
     <tbody>
         <?php foreach ($rows as $row): ?>
             <tr data-booking-id="<?php echo $row['booking_id']; ?>">
-                <td><?php echo $row['booking_id']; ?></td>
-                <td><?php echo $row['booking_date']; ?></td>
-                <td><?php echo $row['event_date']; ?></td>
-                <td><?php echo $row['service_name']; ?></td>
+            <td><?php echo $row['transaction_id']; ?></td>
+            <td><?php echo $row['service_name']; ?></td>
+                <td>BK00<?php echo $row['booking_id']; ?></td>
+                <td><?php echo $row['transaction_date']; ?></td>
+                <td><?php echo $row['amount']; ?></td>
+                <td><?php echo $row['payment_method']; ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

@@ -4,8 +4,9 @@ include 'connection.php'; // Ensure connection to the database
 $rows = [];
 try {
     // SQL query to select data from the tables
-    $sql = "SELECT client_id, first_name,last_name, contact_number,wedding_date,location
-            FROM clients";
+    $sql = "SELECT clients.client_id, clients.first_name, clients.last_name, clients.contact_number, clients.wedding_date, clients.location, users.user_id, users.status
+            FROM clients
+            JOIN users ON clients.user_id = users.user_id";
 
     // Execute query
     $stmt = $pdo->query($sql);
@@ -138,6 +139,7 @@ try {
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
+            height: 100%;
         }
         .close {
             color: #aaa;
@@ -198,22 +200,7 @@ try {
     </head>
     <body>
        <!--navbar--> 
-       <<header class="header">
-            <nav class="navbar">
-                <img src="Images/logo.jpg" width="80" height="60">
-                <a href="#"><i class='bx bx-bell'></i></a>
-                <a href=""><i class='bx bx-message'></i></a>
-                <div class="dropdown-container">
-            <button class="dropdown-btn"><i class='bx bx-user-circle'></i></button>
-             <div class="dropdown-menu">
-             <a href="#"><i class='bx bx-user-circle'></i> Profile</a>
-            <a href="#"><i class='bx bx-cog bx-flip-horizontal' ></i> Settings</a>
-             <div class="divider"></div>
-             <a href="logout.php"><i class='bx bx-exit bx-flip-horizontal'></i> Sign Out</a>
-         </div>
-        </div>
-            </nav>
-        </header>
+       <?php include 'resuableComponents\managerHeader.php' ?>
             <!--sidebar--> 
             <input type="checkbox" id="toggle" >
             <label class="side-toggle" for="toggle"><span ><i class='bx bxs-dashboard' ></i></span></label>
@@ -237,9 +224,7 @@ try {
                 <div class="sidebar-menu">
                     <span class="bx bx-wallet-alt"></span><p><a href="finance.php">Finance</a></p>
                 </div>
-                <div class="sidebar-menu">
-                    <span  class='bx bx-objects-horizontal-left' ></span><p>Reports</p>
-                </div>
+             
                
                
             </div>
@@ -266,6 +251,7 @@ try {
                             <th>Contact</th>
                             <th>Location</th>
                             <th>Event Date</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -277,126 +263,70 @@ try {
                             <td><?php echo $row['contact_number']; ?></td>
                             <td><?php echo $row['location']; ?></td>
                             <td><?php echo $row['wedding_date']; ?></td>
+                            <td><?php echo $row['status']; ?></td>
                             <td>
-                            <span class="material-symbols-outlined edit">edit</span>
-                                <span class="material-symbols-outlined delete">delete</span>
+                            <span class="material-symbols-outlined edit"
+                                          data-client-id="<?php echo $row['client_id']; ?>"
+                                          data-first-name="<?php echo $row['first_name']; ?>"
+                                          data-last-name="<?php echo $row['last_name']; ?>"
+                                          data-contact-number="<?php echo $row['contact_number']; ?>"
+                                          data-location="<?php echo $row['location']; ?>"
+                                          data-wedding-date="<?php echo $row['wedding_date']; ?>">edit</span>
+                            <span class="material-symbols-outlined delete" data-user-id="<?php echo $row['user_id']; ?>">delete</span>
                             </td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
                 <div id="editModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Edit Client</h2>
-        <form id="editForm" method="POST" action="">
-            <input type="hidden" id="editClientId" name="client_id">
-            <label for="editFirstName">First Name:</label>
-            <input type="text" id="editFirstName" name="first_name" required>
-            <label for="editLastName">Last Name:</label>
-            <input type="text" id="editLastName" name="last_name" required>
-            <label for="editContactNumber">Contact Number:</label>
-            <input type="text" id="editContactNumber" name="contact_number" required>
-            <label for="editWeddingDate">Wedding Date:</label>
-            <input type="text" id="editWeddingDate" name="wedding_date" required>
-            <label for="editLocation">Location:</label>
-            <input type="text" id="editLocation" name="location" required>
-            <button type="submit">Save Changes</button>
-        </form>
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Client</h2>
+            <form id="editForm" method="POST" action="update_client.php">
+                <input type="hidden" id="editClientId" name="client_id">
+                <label for="editFirstName">First Name:</label>
+                <input type="text" id="editFirstName" name="first_name">
+                <label for="editLastName">Last Name:</label>
+                <input type="text" id="editLastName" name="last_name">
+                <label for="editContactNumber">Contact Number:</label>
+                <input type="text" id="editContactNumber" name="contact_number">
+                <label for="editLocation">Location:</label>
+                <input type="text" id="editLocation" name="location">
+                <label for="editWeddingDate">Wedding Date:</label>
+                <input type="text" id="editWeddingDate" name="wedding_date">
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
     </div>
-</div>
 
-                     <footer>
-                        <span>showing 1 of 10 of 50 entries</span>
-                        <div class="pagination">
-                            <button>prev</button>
-                            <button class="active" >1</button>
-                            <button>2</button>
-                            <button>3</button>
-                            <button>4</button>
-                            <button>5</button>
-                            <button>Next</button>
-                        </div>
-                     </footer>
+                  
                 </div>
                
             </div>
         </main>
         <script>
-            document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById("editModal");
-    const span = document.getElementsByClassName("close")[0];
+             document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.delete').forEach(button => {
+            button.addEventListener('click', function () {
+                const userId = this.dataset.userId;
 
-    document.querySelectorAll('.delete').forEach(button => {
-        button.addEventListener('click', function () {
-            const clientId = this.closest('tr').querySelector('td:first-child').innerText;
+                if (confirm('Are you sure you want to suspend this user?')) {
+                    const form = document.createElement('form');
+                    form.action = 'delete_accountM.php';
+                    form.method = 'POST';
 
-            if (confirm('Are you sure you want to delete this client?')) {
-                fetch('delete_client.php?delete_id=' + clientId, {
-                    method: 'GET'
-                })
-                .then(response => {
-                    if (response.redirected) {
-                        window.location.href = response.url; // Redirect to update the page after deletion
-                    } else {
-                        alert('Error deleting client');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            }
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'suspend_user_id';
+                    input.value = userId;
+
+                    form.appendChild(input);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
         });
     });
-
-    document.querySelectorAll('.edit').forEach(button => {
-        button.addEventListener('click', function () {
-            const row = this.closest('tr');
-            const clientId = row.querySelector('td:first-child').innerText;
-            const firstName = row.querySelector('td:nth-child(2)').innerText;
-            const lastName = row.querySelector('td:nth-child(3)').innerText;
-            const contactNumber = row.querySelector('td:nth-child(4)').innerText;
-            const location = row.querySelector('td:nth-child(5)').innerText;
-            const weddingDate = row.querySelector('td:nth-child(6)').innerText;
-          
-            document.getElementById('editClientId').value = clientId;
-            document.getElementById('editFirstName').value = firstName;
-            document.getElementById('editLastName').value = lastName;
-            document.getElementById('editContactNumber').value = contactNumber;
-            document.getElementById('editLocation').value = location;
-            document.getElementById('editWeddingDate').value = weddingDate;
-          
-            modal.style.display = "block";
-        });
-    });
-
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    document.getElementById('editForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const formData = new FormData(this);
-
-        fetch('update_client.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url; // Redirect to update the page after edit
-            } else {
-                alert('Error updating client');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-});
 
  //dropdown menu
        
@@ -418,6 +348,68 @@ try {
         }
     }
 
+
+    //edit modal
+  // Delete client confirmation
+  document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.delete').forEach(button => {
+                button.addEventListener('click', function () {
+                    const userId = this.dataset.userId;
+
+                    if (confirm('Are you sure you want to delete this client?')) {
+                        const form = document.createElement('form');
+                        form.action = 'delete_client.php';
+                        form.method = 'POST';
+
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'delete_user_id';
+                        input.value = userId;
+
+                        form.appendChild(input);
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        // Edit client modal
+        document.addEventListener('DOMContentLoaded', function () {
+            const editButtons = document.querySelectorAll('.edit');
+
+            editButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const clientId = this.getAttribute('data-client-id');
+                    const firstName = this.getAttribute('data-first-name');
+                    const lastName = this.getAttribute('data-last-name');
+                    const contactNumber = this.getAttribute('data-contact-number');
+                    const location = this.getAttribute('data-location');
+                    const weddingDate = this.getAttribute('data-wedding-date');
+
+                    document.getElementById('editClientId').value = clientId;
+                    document.getElementById('editFirstName').value = firstName;
+                    document.getElementById('editLastName').value = lastName;
+                    document.getElementById('editContactNumber').value = contactNumber;
+                    document.getElementById('editLocation').value = location;
+                    document.getElementById('editWeddingDate').value = weddingDate;
+
+                    // Display the modal
+                    document.getElementById('editModal').style.display = 'block';
+                });
+            });
+
+            // Close modal when the close button is clicked
+            document.querySelector('.close').addEventListener('click', function () {
+                document.getElementById('editModal').style.display = 'none';
+            });
+
+            // Validate form fields if needed
+            const editForm = document.getElementById('editForm');
+            editForm.addEventListener('submit', function (event) {
+                // Add custom validation here if needed
+            });
+        });
         </script>
     </body>
 </html>
